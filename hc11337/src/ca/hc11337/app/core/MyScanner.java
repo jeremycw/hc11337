@@ -680,7 +680,7 @@ public final class MyScanner implements Iterator<String> {
         matcher = delimPattern.matcher(buf);
         matcher.useTransparentBounds(true);
         matcher.useAnchoringBounds(false);
-        useLocale(Locale.getDefault());
+        //useLocale(Locale.getDefault());
     }
 
     /**

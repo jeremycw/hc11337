@@ -36,7 +36,7 @@ public class Editor {
 	public Vector<int[]> highlightSyntax()
 	{
 		Vector<int[]> points = new Vector<int[]>();
-		MyScanner textScanner = new MyScanner(text);
+		StringTokenizer textScanner = new StringTokenizer(text);
 		String temp = "";
 		while(textScanner.hasNext())
 		{
@@ -56,7 +56,7 @@ public class Editor {
 	
 	public int[] checkTokenAt(int index)
 	{
-		MyScanner textScanner = new MyScanner(text);
+		StringTokenizer textScanner = new StringTokenizer(text);
 		String token = textScanner.getTokenAt(index);
 		int[] results = new int[3];
 		results[0] = dict.checkFor(token)? 1 : 0;
