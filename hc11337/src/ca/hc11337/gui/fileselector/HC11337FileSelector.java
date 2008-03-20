@@ -39,7 +39,7 @@ public class HC11337FileSelector {
 		
 		fileViewer.addDoubleClickListener(new DoubleClickListener(controller));
 		
-		TableColumn column1 = new TableColumn(fileViewer.getTable(), SWT.CENTER);
+		TableColumn column1 = new TableColumn(fileViewer.getTable(), SWT.LEFT);
 		column1.setText("Source Files");
 	}
 }

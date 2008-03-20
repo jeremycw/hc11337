@@ -51,18 +51,6 @@ public class HC11337Editor {
 		}
 	}
 	
-	/*public void unHighlightSyntax(Vector<Point> positions)
-	{
-		for(int i = 0; i < positions.size(); i++)
-		{
-			StyleRange highlights = new StyleRange();
-			highlights.start = positions.get(i).x;
-			highlights.length = positions.get(i).y;
-			highlights.foreground = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
-			fileEditor.setStyleRange(highlights);
-		}
-	}*/
-	
 	public void setText(String text)
 	{
 		fileEditor.setText(text);
