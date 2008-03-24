@@ -1,5 +1,0 @@
-package ca.hc11337.app.core;
-
-public class StackManager {
-
-}

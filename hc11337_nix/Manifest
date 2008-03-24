@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: ca.hc11337.app.HC11337
-Class-Path: lib/commands.jar lib/contenttype.jar lib/jobs.jar lib/runtime.jar lib/common.jar lib/preferences.jar lib/registry.jar lib/swt.jar lib/jface.jar
