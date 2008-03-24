@@ -23,8 +23,9 @@ public class HC11337Controller implements Observer {
 	public void newFile()
 	{
 		try{
-			view.newEditorTab("Untitled-"+newFileCount);
-			model.newEditor();
+			view.newEditorTab("Untitled-"+newFileCount+".asm");
+			model.newEditor("Untitled-"+newFileCount+".asm");
+			view.switchEditor(view.getNumberOfTabs()-1);
 			newFileCount++;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -173,12 +174,21 @@ public class HC11337Controller implements Observer {
 	
 	public void highlightAtCaret()
 	{
+		model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
 		int[] array1 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition());
-		int[] array2 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition()-1);
+		int[] array2;
 		Vector<int[]> v = new Vector<int[]>();
+		if(view.getCurrentEditor().getCaretPosition()-2 >= 0){
+			array2 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition()-2);
+			v.add(array2);
+		}
 		v.add(array1);
-		v.add(array2);
 		view.getCurrentEditor().highlightSyntax(v);
+	}
+	
+	public void selectAll()
+	{
+		view.getCurrentEditor().selectAll();
 	}
 	
 	public void update(Observable o, Object arg) {

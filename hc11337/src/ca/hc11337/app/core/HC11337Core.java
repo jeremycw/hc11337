@@ -12,9 +12,9 @@ public class HC11337Core extends Observable {
 	private WatchedMemManager watchedMemManager = new WatchedMemManager();
 	private ConsoleManager consoleManager = new ConsoleManager();
 	
-	public void newEditor() throws FileNotFoundException
+	public void newEditor(String name) throws FileNotFoundException
 	{
-		editors.add(new Editor());
+		editors.add(new Editor(name));
 	}
 	
 	public void removeEditor(int index)

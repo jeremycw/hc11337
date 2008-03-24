@@ -1,26 +1,54 @@
 package ca.hc11337.gui.editor;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.graphics.*;
+import java.util.Vector;
 
-import java.util.*;
-import java.awt.Point;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+
+import ca.hc11337.gui.HC11337Controller;
 
 public class HC11337Editor {
 	private TabItem editorTab;
 	private StyledText fileEditor;
+	private final HC11337Controller controller;
 	
-	public HC11337Editor(TabFolder parent, String name, int style)
+	public HC11337Editor(TabFolder parent, String name, HC11337Controller controller, int style)
 	{
+		this.controller = controller;
 		editorTab = new TabItem (parent, SWT.NONE);
 		editorTab.setText (name);
 		fileEditor = new StyledText (parent, SWT.BORDER | SWT.H_SCROLL| SWT.V_SCROLL);
 		editorTab.setControl(fileEditor);
 		fileEditor.setTabs(8);
 		fileEditor.setFont(new Font(Display.getCurrent(), "Fixedsys", 10, SWT.NORMAL));
+		fileEditor.addKeyListener(new MyKeyListener(controller));
 		parent.pack();
+	}
+	
+	class MyKeyListener implements KeyListener{
+		private HC11337Controller controller;
+		
+		MyKeyListener(HC11337Controller controller)
+		{
+			this.controller = controller;
+		}
+		
+		public void keyPressed(KeyEvent e)
+		{
+			controller.highlightAtCaret();
+		}
+		
+		public void keyReleased(KeyEvent e)
+		{
+			
+		}
 	}
 	
 	public boolean hasSelection()
@@ -97,13 +125,8 @@ public class HC11337Editor {
 		fileEditor.setCaretOffset(position);
 	}
 	
-	public int getVerticalScrollPosition()
+	public void selectAll()
 	{
-		return fileEditor.getTopPixel();
-	}
-	
-	public void setVerticalScrollPosition(int position)
-	{
-		fileEditor.setTopPixel(position);
+		fileEditor.selectAll();
 	}
 }

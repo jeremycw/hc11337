@@ -2529,13 +2529,21 @@ public final class StringTokenizer implements Iterator<String> {
 	
 	public String getTokenAt(int index)
 	{
-		next();
-		while(buf.charAt(index) != ' ')
-		{
-			index--;
+		String token;
+		if(hasNext()){
+			next();
+			while(buf.charAt(index) != ' ' && buf.charAt(index) != '\n' && buf.charAt(index) != '\t' && index > 0)
+			{
+				index--;
+			}
+			position = index;
+			if(hasNext())
+				token = next();
+			else
+				token = "";
 		}
-		position = index;
-		String token = next();
+		else
+			token = "";
 		return token;
 	}
 }

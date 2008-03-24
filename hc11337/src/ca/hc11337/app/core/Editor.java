@@ -11,7 +11,10 @@ public class Editor {
 	private SyntaxDictionary dict = new SyntaxDictionary("hc11.syn");
 	private File file;
 	
-	public Editor() throws FileNotFoundException{}
+	public Editor(String name) throws FileNotFoundException
+	{
+		file = new File("workspace/"+name);
+	}
 	
 	public Editor(File file) throws FileNotFoundException
 	{
@@ -56,10 +59,12 @@ public class Editor {
 	
 	public int[] checkTokenAt(int index)
 	{
+		if(index == text.length())
+			index--;
 		StringTokenizer textScanner = new StringTokenizer(text);
 		String token = textScanner.getTokenAt(index);
 		int[] results = new int[3];
-		results[0] = dict.checkFor(token)? 1 : 0;
+		results[0] = dict.checkFor(token.toUpperCase())? 1 : 0;
 		results[1] = textScanner.getIndex()-token.length();
 		results[2] = token.length();
 		return results;

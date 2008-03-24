@@ -79,7 +79,7 @@ public class HC11337GUI implements Observer {
 	
 	public void newEditorTab(String name)
 	{
-		editors.add(new HC11337Editor(editFolder, name, SWT.MULTI));
+		editors.add(new HC11337Editor(editFolder, name, controller, SWT.MULTI));
 		sashEdit.setWeights(new int[] {5,3});
 	}
 	
