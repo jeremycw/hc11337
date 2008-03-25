@@ -175,15 +175,17 @@ public class HC11337Controller implements Observer {
 	public void highlightAtCaret()
 	{
 		model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
-		int[] array1 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition());
-		int[] array2;
-		Vector<int[]> v = new Vector<int[]>();
-		if(view.getCurrentEditor().getCaretPosition()-2 >= 0){
-			array2 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition()-2);
-			v.add(array2);
+		if(model.getText(view.indexOfCurrentEditor()).length() != 0){
+			int[] array1 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition());
+			int[] array2;
+			Vector<int[]> v = new Vector<int[]>();
+			if(view.getCurrentEditor().getCaretPosition()-2 >= 0){
+				array2 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition()-2);
+				v.add(array2);
+			}
+			v.add(array1);
+			view.getCurrentEditor().highlightSyntax(v);
 		}
-		v.add(array1);
-		view.getCurrentEditor().highlightSyntax(v);
 	}
 	
 	public void selectAll()
