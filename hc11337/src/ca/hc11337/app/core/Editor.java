@@ -28,7 +28,12 @@ public class Editor {
 	
 	public void setText(String text)
 	{
-		this.text = text;
+		if(text.length() > 0){
+			if(text.charAt(text.length()-1) != '\n')
+				this.text = text + '\n';
+			else
+				this.text = text;
+		}
 	}
 	
 	public String getText()

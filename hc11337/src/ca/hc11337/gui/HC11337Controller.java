@@ -115,22 +115,28 @@ public class HC11337Controller implements Observer {
 	
 	public void cut()
 	{
-		if(view.getCurrentEditor().hasSelection())
-		{
-			view.getCurrentEditor().cut();
-			model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
-		}
+		if(view.getNumberOfTabs() > 0)
+			if(view.getCurrentEditor().hasSelection())
+			{
+				view.getCurrentEditor().cut();
+				model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
+				highlightAtCaret();
+			}
 	}
 	
 	public void copy()
 	{
-		view.getCurrentEditor().copy();
+		if(view.getNumberOfTabs() > 0)
+			view.getCurrentEditor().copy();
 	}
 	
 	public void paste()
 	{
-		view.getCurrentEditor().paste();
-		model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
+		if(view.getNumberOfTabs() > 0){
+			view.getCurrentEditor().paste();
+			model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
+			highlightSyntax();
+		}
 	}
 	
 	public void reset()
@@ -186,6 +192,12 @@ public class HC11337Controller implements Observer {
 			v.add(array1);
 			view.getCurrentEditor().highlightSyntax(v);
 		}
+	}
+	
+	public void highlightSyntax()
+	{
+		//view.getCurrentEditor().setText(model.getText(view.indexOfCurrentEditor()));
+		view.getCurrentEditor().highlightSyntax(model.getHighlightRanges(view.indexOfCurrentEditor()));
 	}
 	
 	public void selectAll()

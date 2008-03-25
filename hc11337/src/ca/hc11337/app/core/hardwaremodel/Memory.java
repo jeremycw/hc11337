@@ -7,7 +7,7 @@ public class Memory {
 	
 	public Memory()
 	{
-		for(short i = 0; i <= 65535; i++)
+		for(int i = 0; i <= 65535; i++)
 		{
 			mem.add(new UnsignedNumber(0,1));
 		}

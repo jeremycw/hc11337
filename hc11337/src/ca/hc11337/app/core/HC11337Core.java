@@ -11,6 +11,12 @@ public class HC11337Core extends Observable {
 	private CPUManager cpuManager = new CPUManager();
 	private WatchedMemManager watchedMemManager = new WatchedMemManager();
 	private ConsoleManager consoleManager = new ConsoleManager();
+	private HardwareAPI api = new HardwareAPI();
+	
+	public HC11337Core()
+	{
+		cpuManager.setRegisterNames(api.getRegisterNames());
+	}
 	
 	public void newEditor(String name) throws FileNotFoundException
 	{
@@ -57,4 +63,21 @@ public class HC11337Core extends Observable {
 	{
 		return editors.get(index).getFile();
 	}
+	
+	public String[] getRegisterNames()
+	{
+		return cpuManager.getRegisterNames();
+	}
+	
+	public int[] getRegisterValues()
+	{
+		return cpuManager.getRegisterValues();
+	}
+	
+	public void setRegisterValue(int index, int value)
+	{
+		cpuManager.setRegisterValue(index, value);
+	}
+	
+	
 }

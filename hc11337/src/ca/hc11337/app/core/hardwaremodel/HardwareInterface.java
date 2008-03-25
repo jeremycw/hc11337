@@ -4,6 +4,7 @@ public class HardwareInterface
 {
 	private Memory mem = new Memory();
 	private CPU cpu = new CPU(mem);
+	private String[] regNames = new String[]{"A", "B", "D", "X", "Y", "PC", "SP"};
 	
 	public void setReg(int reg, int val)
 	{
@@ -33,5 +34,10 @@ public class HardwareInterface
 	public void execute()
 	{
 		cpu.executeInstruction();
+	}
+	
+	public String[] getRegNames()
+	{
+		return regNames;
 	}
 }
