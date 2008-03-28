@@ -60,5 +60,4 @@ public class FileSelectorLabelProvider implements ITableLabelProvider {
 		listeners.remove(arg0);
 
 	}
-
 }

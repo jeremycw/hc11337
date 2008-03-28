@@ -20,7 +20,7 @@ public class Run extends Action {
 	
 	public void run()
 	{
-		
+		controller.run();
 	}
 	
 

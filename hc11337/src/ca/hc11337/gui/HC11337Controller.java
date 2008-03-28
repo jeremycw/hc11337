@@ -95,7 +95,7 @@ public class HC11337Controller implements Observer {
 	
 	public void run()
 	{
-		
+		view.setCPURegister(0, 12);
 	}
 	
 	public void step()
@@ -203,6 +203,17 @@ public class HC11337Controller implements Observer {
 	public void selectAll()
 	{
 		view.getCurrentEditor().selectAll();
+	}
+	
+	public void initCPUView()
+	{
+		//init CPU view
+		String regNames[] = model.getRegisterNames();
+		String[][] regs = new String[2][regNames.length];
+		regs[0] = regNames;
+		for(int i = 0; i < regs[0].length; i++)
+			regs[1][i] = "0";
+		view.setCPUData(regs);
 	}
 	
 	public void update(Observable o, Object arg) {

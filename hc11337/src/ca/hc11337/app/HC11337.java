@@ -70,6 +70,7 @@ public class HC11337 extends ApplicationWindow{
 		getShell().setText("HC11337 - pronounced 'aitch 'cee 'ee-'leet");
 		getShell().setImage(icon);
 		gui.setUp(parent, controller);
+		controller.initCPUView();
 		return parent;
 	}
 }

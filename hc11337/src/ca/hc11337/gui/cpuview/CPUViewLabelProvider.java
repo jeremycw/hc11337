@@ -1,10 +1,11 @@
 package ca.hc11337.gui.cpuview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import java.io.*;
-import java.util.*;
 
 public class CPUViewLabelProvider implements ITableLabelProvider {
 	private Image text = new Image(null, "icons/text.png");
@@ -12,33 +13,19 @@ public class CPUViewLabelProvider implements ITableLabelProvider {
 	
 	List<ILabelProviderListener> listeners = new ArrayList<ILabelProviderListener>();
 	
-	private String getExtension(File file)
-	{
-		String name = file.getName();
-		String extension = "";
-		int i = name.length()-1;
-		do
-		{
-			extension = name.charAt(i) + extension;
-			i--;
-		}while(name.charAt(i) != '.');
-		
-		return extension.toLowerCase();
-	}
-	
 	public Image getColumnImage(Object arg0, int arg1) {
-		if(getExtension((File)arg0).equals("asm"))
-			return text;
-		if(getExtension((File)arg0).equals("s19"))
-			return binary;
-		else
-			return text;
+		return null;
 	}
 
 	public String getColumnText(Object arg0, int arg1) {
-		String name = ((File)arg0).getName();
-		String ext = getExtension((File)arg0);
-		return name.substring(0, name.length()-ext.length()-1);
+		switch(arg1)
+		{
+		case 0:
+			return ((String[])arg0)[0];
+		case 1:
+			return ((String[])arg0)[1];
+		}
+		return "Boo";
 	}
 
 	public void addListener(ILabelProviderListener arg0) {

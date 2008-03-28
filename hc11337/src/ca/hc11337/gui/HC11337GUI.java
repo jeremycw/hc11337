@@ -69,9 +69,9 @@ public class HC11337GUI implements Observer {
 		
 		//tabFolder.pack ();
 		
-		cpuView = new HC11337CPUView(sashCPU, SWT.BORDER | SWT.FULL_SELECTION);
-		stackView = new HC11337StackView(sashCPU, SWT.BORDER | SWT.FULL_SELECTION);
-		watchedMemView = new HC11337WatchedMem(sashCPU, SWT.BORDER | SWT.FULL_SELECTION);
+		cpuView = new HC11337CPUView(sashCPU, SWT.FULL_SELECTION);
+		stackView = new HC11337StackView(sashCPU, SWT.FULL_SELECTION);
+		watchedMemView = new HC11337WatchedMem(sashCPU, SWT.FULL_SELECTION);
 		
 		sashMain.setWeights(new int[] {1,3,1});
 		sashEdit.setWeights(new int[] {5,3});
@@ -127,6 +127,16 @@ public class HC11337GUI implements Observer {
 	public void setConsoleText(String text)
 	{
 		console.setText(text);
+	}
+	
+	public void setCPUData(String[][] reg)
+	{
+		cpuView.setData(reg);
+	}
+	
+	public void setCPURegister(int index, int value)
+	{
+		cpuView.setRegister(index, value);
 	}
 	
 	public void displayStatusMessage()

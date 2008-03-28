@@ -2546,6 +2546,11 @@ public final class StringTokenizer implements Iterator<String> {
 			token = "";
 		return token;
 	}
+	
+	public void setIndex(int index)
+	{
+		position = index;
+	}
 }
 
 
