@@ -22,31 +22,24 @@ public class UnsignedNumber implements Cloneable {
 	protected int val;
 	protected int bytes;
 	protected int maxVal;
-	protected Vector<Integer> byteArray = new Vector<Integer>();
+	protected int[] byteArray;
 	protected boolean overflow = false;
 	protected boolean tcOverflow = false;
 	
 	public UnsignedNumber(int value, int bytes)
 	{
 		this.bytes = bytes;
+		byteArray = new int[bytes];
 		
-		int maxMul = 0;
-		for(int i = 0; i <= bytes; i++)
-		{
-			maxMul += 0x10^i;
-		}
-		maxVal = maxMul * 0xF;
+		int power = bytes * 2;
+		maxVal = (int)(Math.pow(16.0, (double)power) - 1.0);
 		
 		if(value > maxVal)
-			this.val = maxVal;
+			val = maxVal;
+		else
+			val = value;
 		
-		int power = 2 * bytes;
-		for(int i = 0; i < bytes; i++)
-		{
-			byteArray.add(val/(0x10^power));
-			power -= 2;
-		}
-		byteArray.add(val%0x100);
+		constructByteArray();
 	}
 	
 	public void inc()
@@ -63,6 +56,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void dec()
@@ -79,6 +74,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void sub(int a)
@@ -95,6 +92,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void sub(UnsignedNumber a)
@@ -111,6 +110,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void add(int a)
@@ -128,6 +129,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void add(UnsignedNumber a)
@@ -145,6 +148,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void mul(UnsignedNumber a)
@@ -161,6 +166,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void mul(int a)
@@ -177,6 +184,8 @@ public class UnsignedNumber implements Cloneable {
 		}
 		if(ival < 128 && val >= 128)
 			tcOverflow = true;
+		
+		constructByteArray();
 	}
 	
 	public void setVal(int val)
@@ -185,6 +194,8 @@ public class UnsignedNumber implements Cloneable {
 			this.val = val;
 		else
 			this.val = maxVal;
+		
+		constructByteArray();
 	}
 	
 	public int getVal()
@@ -214,6 +225,17 @@ public class UnsignedNumber implements Cloneable {
 	
 	public int getByte(int index)
 	{
-		return byteArray.get(index);
+		return byteArray[index];
+	}
+	
+	private void constructByteArray()
+	{
+		String hexString = Integer.toHexString(val);
+		if(hexString.length() % 2 == 1)
+			hexString = "0"+hexString;
+		for(int index = 0; index < hexString.length(); index +=2)
+		{
+			byteArray[index/2] = Integer.parseInt(hexString.substring(index, index+2), 16);
+		}
 	}
 }

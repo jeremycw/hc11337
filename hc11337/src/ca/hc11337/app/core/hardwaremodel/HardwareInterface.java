@@ -32,6 +32,14 @@ public class HardwareInterface
 		cpu.setReg(reg, a);
 	}
 	
+	public int[] getRegisterValues()
+	{
+		int[] values = new int[regNames.length];
+		for(int i = 0; i < regNames.length; i++)
+			values[i] = cpu.getReg(i).getVal();
+		return values;
+	}
+	
 	public int getReg(int reg)
 	{
 		return cpu.getReg(reg).getVal();

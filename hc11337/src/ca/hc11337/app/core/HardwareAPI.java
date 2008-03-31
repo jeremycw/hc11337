@@ -16,7 +16,9 @@
 
 package ca.hc11337.app.core;
 
-import ca.hc11337.app.core.hardwaremodel.*;
+import java.util.Hashtable;
+
+import ca.hc11337.app.core.hardwaremodel.HardwareInterface;
 
 public class HardwareAPI {
 	private HardwareInterface hardware = new HardwareInterface();
@@ -24,5 +26,25 @@ public class HardwareAPI {
 	public String[] getRegisterNames()
 	{
 		return hardware.getRegNames();
+	}
+	
+	public int[] getRegisterValues()
+	{
+		return null;
+	}
+	
+	public Hashtable<Integer, Integer> getChangedMemoryValues()
+	{
+		return null;
+	}
+	
+	public void setMemoryCell(int index, int value)
+	{
+		
+	}
+	
+	public void setRegister(int index, int value)
+	{
+		
 	}
 }
