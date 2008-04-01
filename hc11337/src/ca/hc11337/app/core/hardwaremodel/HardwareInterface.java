@@ -64,4 +64,14 @@ public class HardwareInterface
 	{
 		return regNames;
 	}
+	
+	public void setMemory(int index, int value)
+	{
+		mem.write(index, new UnsignedNumber(value, 1));
+	}
+	
+	public int getMemory(int index, int value)
+	{
+		return mem.read(index).getVal();
+	}
 }

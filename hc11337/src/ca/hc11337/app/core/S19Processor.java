@@ -45,6 +45,7 @@ public class S19Processor {
 			addressRead = false;
 			byteCountRead = false;
 			byteReads = 0;
+			byteCount = 0;
 		}
 		addressRead = true;
 		return Integer.parseInt(currentLine.substring(4, 8), 16);
@@ -53,7 +54,7 @@ public class S19Processor {
 	public int nextByte()
 	{
 		if(byteCount == 0)
-			byteCount = Integer.parseInt(currentLine.substring(2, 4));
+			byteCount = Integer.parseInt(currentLine.substring(2, 4), 16);
 		if(byteReads == byteCount-3){
 			currentLine = nextLine;
 			nextLine = scanner.nextLine();
@@ -75,14 +76,14 @@ public class S19Processor {
 			byteCountRead = false;
 			addressRead = false;
 			byteReads = 0;
+			byteCount = 0;
 		}
 		byteCountRead = true;
-		return Integer.parseInt(currentLine.substring(2, 4));
+		return Integer.parseInt(currentLine.substring(2, 4), 16)-3;
 	}
 	
 	public boolean hasNextLine()
 	{
-		System.out.println(nextLine.charAt(1));
 		return nextLine.charAt(1) == '9'? false : true;
 	}
 

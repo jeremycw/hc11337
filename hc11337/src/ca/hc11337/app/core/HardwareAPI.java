@@ -40,7 +40,7 @@ public class HardwareAPI {
 	
 	public void setMemoryCell(int index, int value)
 	{
-		
+		hardware.setMemory(index, value);
 	}
 	
 	public void setRegister(int index, int value)

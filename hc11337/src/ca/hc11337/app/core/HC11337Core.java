@@ -97,9 +97,20 @@ public class HC11337Core extends Observable {
 		cpuManager.setRegisterValue(index, value);
 	}
 	
-	public void loadS19(File file)
+	public void loadS19(File file) throws FileNotFoundException
 	{
-		
+		S19Processor processor = new S19Processor(file);
+		while(processor.hasNextLine())
+		{
+			int addr = processor.nextAddress();
+			int bc = processor.nextByteCount();
+			for(int i = 0; i < bc; i++)
+			{
+				int newByte = processor.nextByte();
+				api.setMemoryCell(addr, newByte);
+				addr++;
+			}
+		}
 	}
 	
 	

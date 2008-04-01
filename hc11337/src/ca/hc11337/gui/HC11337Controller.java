@@ -70,7 +70,11 @@ public class HC11337Controller implements Observer {
 	
 	public void loadBinary(File file)
 	{
-		model.loadS19(file);
+		try{
+			model.loadS19(file);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void openFile(File file)

@@ -40,6 +40,7 @@ public class HC11337FileSelector {
 		
 		class DoubleClickListener implements IDoubleClickListener {
 			private HC11337Controller controller;
+			
 			public DoubleClickListener(HC11337Controller controller)
 			{
 				this.controller = controller;
@@ -49,7 +50,33 @@ public class HC11337FileSelector {
 			{
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				File file = (File)selection.getFirstElement();
-				controller.openFile(file);
+				if(getExtension(file).equals("asm")){
+					controller.openFile(file);
+					File binary = new File("workspace/"+getNameMinusExtension(file)+".s19");
+					controller.loadBinary(binary);
+				}else
+					controller.loadBinary(file);
+			}
+			
+			private String getNameMinusExtension(File file)
+			{
+				String nameExt = file.getName();
+				String ext = getExtension(file);
+				return nameExt.substring(0, nameExt.length()-ext.length()-1);
+			}
+			
+			private String getExtension(File file)
+			{
+				String name = file.getName();
+				String extension = "";
+				int i = name.length()-1;
+				do
+				{
+					extension = name.charAt(i) + extension;
+					i--;
+				}while(name.charAt(i) != '.');
+				
+				return extension.toLowerCase();
 			}
 		}
 		
