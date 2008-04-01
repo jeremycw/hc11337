@@ -227,13 +227,18 @@ public class HC11337Controller implements Observer {
 	
 	public void initCPUView()
 	{
-		//init CPU view
 		String regNames[] = model.getRegisterNames();
 		String[][] regs = new String[2][regNames.length];
 		regs[0] = regNames;
 		for(int i = 0; i < regs[0].length; i++)
 			regs[1][i] = "0";
 		view.setCPUData(regs);
+	}
+	
+	public void initMemTab()
+	{
+		int mem[] = model.getMemDump();
+		view.setMemData(mem);
 	}
 	
 	public void update(Observable o, Object arg) {

@@ -107,10 +107,20 @@ public class HC11337Core extends Observable {
 			for(int i = 0; i < bc; i++)
 			{
 				int newByte = processor.nextByte();
-				api.setMemoryCell(addr, newByte);
+				api.setMemoryAt(addr, newByte);
 				addr++;
 			}
 		}
+		setChanged();
+		notifyObservers(2);
+	}
+	
+	public int[] getMemDump()
+	{
+		int[] memDump = new int[65536];
+		for(int i = 0; i < 65536; i++)
+				memDump[i] = api.getMemoryAt(i);
+		return memDump;
 	}
 	
 	

@@ -14,42 +14,25 @@
     along with HC11337.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package ca.hc11337.app.core;
+package ca.hc11337.gui.memoryview;
 
-import java.util.Hashtable;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-import ca.hc11337.app.core.hardwaremodel.HardwareInterface;
+public class MemoryViewContentProvider implements IStructuredContentProvider {
+	
+	public Object[] getElements(Object arg0) {
+		return (Object[])arg0;
+	}
 
-public class HardwareAPI {
-	private HardwareInterface hardware = new HardwareInterface();
-	
-	public String[] getRegisterNames()
-	{
-		return hardware.getRegNames();
+	public void dispose() {
+		// TODO Auto-generated method stub
+
 	}
-	
-	public int[] getRegisterValues()
-	{
-		return null;
+
+	public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
+		// TODO Auto-generated method stub
+
 	}
-	
-	public Hashtable<Integer, Integer> getChangedMemoryValues()
-	{
-		return null;
-	}
-	
-	public void setMemoryAt(int index, int value)
-	{
-		hardware.setMemory(index, value);
-	}
-	
-	public int getMemoryAt(int index)
-	{
-		return hardware.getMemory(index);
-	}
-	
-	public void setRegister(int index, int value)
-	{
-		
-	}
+
 }

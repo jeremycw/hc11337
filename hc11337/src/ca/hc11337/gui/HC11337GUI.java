@@ -80,7 +80,7 @@ public class HC11337GUI implements Observer {
 		console = new HC11337Console(tabFolder, SWT.BORDER | SWT.H_SCROLL| SWT.V_SCROLL);
 		consoleTab.setControl(console.getConsole());
 		
-		mem = new HC11337Memory(tabFolder, SWT.NULL);
+		mem = new HC11337Memory(tabFolder, SWT.SINGLE);
 		memTab.setControl(mem.getMem());
 		
 		//tabFolder.pack ();
@@ -150,6 +150,15 @@ public class HC11337GUI implements Observer {
 		cpuView.setData(reg);
 	}
 	
+	public void setMemData(int[] memory)
+	{
+		int[][] memDump = new int[4096][16];
+		for(int i = 0; i < 4096; i++)
+			for(int j = 0; j < 16; j++)
+				memDump[i][j] = memory[i*0x10+j];
+		mem.setData(memDump);
+	}
+	
 	public void setCPURegister(int index, int value)
 	{
 		cpuView.setRegister(index, value);
@@ -206,6 +215,9 @@ public class HC11337GUI implements Observer {
 			break;
 		case 1:
 			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges(indexOfCurrentEditor()));
+			break;
+		case 2:
+			setMemData(((HC11337Core)o).getMemDump());
 			break;
 		}
 	}

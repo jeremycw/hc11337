@@ -70,7 +70,7 @@ public class HardwareInterface
 		mem.write(index, new UnsignedNumber(value, 1));
 	}
 	
-	public int getMemory(int index, int value)
+	public int getMemory(int index)
 	{
 		return mem.read(index).getVal();
 	}

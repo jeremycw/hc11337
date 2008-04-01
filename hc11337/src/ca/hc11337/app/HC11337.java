@@ -82,11 +82,12 @@ public class HC11337 extends ApplicationWindow{
 	protected Control createContents(Composite parent)
 	{
 		Image icon = new Image(Display.getCurrent(), "icons/chip.png");
-		getShell().setSize(720, 570);
+		getShell().setSize(768, 576);
 		getShell().setText("HC11337 - pronounced 'aitch 'cee 'ee-'leet");
 		getShell().setImage(icon);
 		gui.setUp(parent, controller);
 		controller.initCPUView();
+		controller.initMemTab();
 		return parent;
 	}
 }
