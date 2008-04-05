@@ -32,8 +32,9 @@ public class S19Processor {
 	public S19Processor(File file) throws FileNotFoundException
 	{
 		scanner = new Scanner(file);
-		scanner.nextLine();
-		currentLine = scanner.nextLine();
+		do{
+			currentLine = scanner.nextLine();
+		}while(currentLine.charAt(1) != '1');
 		nextLine = scanner.nextLine();
 	}
 	

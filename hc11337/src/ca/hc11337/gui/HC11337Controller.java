@@ -186,7 +186,7 @@ public class HC11337Controller implements Observer {
 		try{
 			if(view.getNumberOfTabs() > 0)
 			{
-				Process asm = Runtime.getRuntime().exec("asm11.exe -l " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
+				Process asm = Runtime.getRuntime().exec("./as11 " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
 				Scanner console = new Scanner(asm.getInputStream());
 				while(console.hasNext())
 				{
