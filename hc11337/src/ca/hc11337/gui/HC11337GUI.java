@@ -219,6 +219,16 @@ public class HC11337GUI implements Observer {
 		case 2:
 			setMemData(((HC11337Core)o).getMemDump());
 			break;
+		case 3:
+			String regNames[] = ((HC11337Core)o).getRegisterNames();
+			int regValues[] = ((HC11337Core)o).getRegisterValues();
+			String[][] regs = new String[2][regNames.length];
+			regs[0] = regNames;
+			for(int i = 0; i < regValues.length; i++)
+				regs[1][i] = Integer.toHexString(regValues[i]);
+			setCPUData(regs);
+			setMemData(((HC11337Core)o).getMemDump());
+			break;
 		}
 	}
 

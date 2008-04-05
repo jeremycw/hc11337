@@ -39,10 +39,11 @@ public class STAA_B7 implements Instruction
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
 		pc.inc();
 		UnsignedNumber op = mem.read(pc).clone();
-		op.mul(0x100);
-		op.add(mem.read(pc));
-		mem.write(op, cpu.getReg(Reg.A).clone());
 		pc.inc();
+		int addr = op.getVal()*0x100;
+		addr = addr + mem.read(pc).getVal();
+		pc.inc();
+		mem.write(addr, cpu.getReg(Reg.A).clone());
 		int val = cpu.getReg(Reg.A).getVal();
 		
 		//set ccr

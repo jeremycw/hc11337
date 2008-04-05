@@ -20,11 +20,11 @@ package ca.hc11337.gui.menubar;
 import org.eclipse.jface.action.*;
 
 import ca.hc11337.gui.HC11337Controller;
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 import ca.hc11337.gui.actions.*;
 
 
-public class FileMenu implements Managed{
+public class FileMenu implements Managable{
 	private MenuManager menu = new MenuManager("&File");
 	public FileMenu(HC11337Controller controller)
 	{

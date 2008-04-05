@@ -22,11 +22,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 
 import ca.hc11337.gui.HC11337Controller;
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 import ca.hc11337.gui.actions.*;
 
 
-public class OptionsMenu implements Managed{
+public class OptionsMenu implements Managable{
 	private MenuManager menu = new MenuManager("&Options");
 	public OptionsMenu(HC11337Controller controller)
 	{

@@ -21,7 +21,7 @@ import org.eclipse.jface.action.*;
 import ca.hc11337.gui.*;
 
 
-public class HC11337Menu implements Managed
+public class HC11337Menu implements Managable
 {
 	private MenuManager menu = new MenuManager(null);
 	

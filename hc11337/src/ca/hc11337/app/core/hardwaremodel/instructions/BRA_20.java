@@ -32,7 +32,9 @@ public class BRA_20 implements Instruction
 	public void exec()
 	{
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
+		pc.inc();
 		byte op = (byte)mem.read(pc).getVal();
+		pc.inc();
 		pc.add((int)op);
 	}
 

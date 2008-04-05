@@ -25,7 +25,7 @@ import ca.hc11337.gui.*;
 import ca.hc11337.gui.actions.*;
 
 
-public class AboutMenu implements Managed {
+public class AboutMenu implements Managable {
 	private MenuManager menu = new MenuManager("&About");
 	public AboutMenu(HC11337Controller controller)
 	{

@@ -16,14 +16,18 @@
 
 package ca.hc11337.app.core.hardwaremodel;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import ca.hc11337.app.core.hardwaremodel.instructions.*;
+
 
 public class CPU
 {
 	private Memory mem;
 	private boolean ccr[] = new boolean[7];
 	private Vector<UnsignedNumber> registers = new Vector<UnsignedNumber>();
-	private Hashtable<Byte, Instruction> instructionSet = new Hashtable<Byte, Instruction>();
+	private Hashtable<Integer, Instruction> instructionSet = new Hashtable<Integer, Instruction>();
 	
 	public CPU(Memory m)
 	{
@@ -34,9 +38,36 @@ public class CPU
 		registers.add(new UnsignedNumber(0,2));
 		registers.add(new UnsignedNumber(0,2));
 		registers.add(new UnsignedNumber(0,2));
-		registers.add(new UnsignedNumber(0,2));
-		registers.add(new UnsignedNumber(0,2));
-		//initialize instructionSet
+		registers.add(new UnsignedNumber(0xC000,2));
+		registers.add(new UnsignedNumber(0xFFFF,2));
+		
+		//TODO initialize instructionSet
+		instructionSet.put(0x1B, new ABA_1B(this, mem));
+		instructionSet.put(0x3A, new ABX_3A(this, mem));
+		instructionSet.put(0x183A, new ABY_183A(this, mem));
+		instructionSet.put(0x18AB, new ADDA_18AB(this, mem));
+		instructionSet.put(0x9B, new ADDA_9B(this, mem));
+		instructionSet.put(0x8B, new ADDA_8B(this, mem));
+		instructionSet.put(0xAB, new ADDA_AB(this, mem));
+		instructionSet.put(0xBB, new ADDA_BB(this, mem));
+		instructionSet.put(0x27, new BEQ_27(this, mem));
+		instructionSet.put(0x25, new BLO_25(this, mem));
+		instructionSet.put(0x23, new BLS_23(this, mem));
+		instructionSet.put(0x20, new BRA_20(this, mem));
+		instructionSet.put(0x4A, new DECA_4A(this, mem));
+		instructionSet.put(0x9D, new JSR_9D(this, mem));
+		instructionSet.put(0xBD, new JSR_BD(this, mem));
+		instructionSet.put(0x18A6, new LDAA_18A6(this, mem));
+		instructionSet.put(0x86, new LDAA_86(this, mem));
+		instructionSet.put(0x96, new LDAA_96(this, mem));
+		instructionSet.put(0xA6, new LDAA_A6(this, mem));
+		instructionSet.put(0xB6, new LDAA_B6(this, mem));
+		instructionSet.put(0xB7, new STAA_B7(this, mem));
+		instructionSet.put(0x18A7, new STAA_18A7(this, mem));
+		instructionSet.put(0x97, new STAA_97(this, mem));
+		instructionSet.put(0xA7, new STAA_A7(this, mem));
+		instructionSet.put(0xB7, new STAA_B7(this, mem));
+		
 	}
 	
 	public void setReg(int reg, UnsignedNumber val)
@@ -84,7 +115,7 @@ public class CPU
 		default:
 			
 		}
-		currentInstruction = instructionSet.get(opcode);
+		currentInstruction = instructionSet.get(opcode.getVal());
 		currentInstruction.exec();
 	}
 }

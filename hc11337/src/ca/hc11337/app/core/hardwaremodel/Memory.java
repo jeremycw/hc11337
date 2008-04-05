@@ -20,6 +20,7 @@ import java.util.*;
 
 public class Memory {
 	private Vector<UnsignedNumber> mem = new Vector<UnsignedNumber>();
+	private Vector<Integer> changedAddresses = new Vector<Integer>();
 	
 	public Memory()
 	{
@@ -46,6 +47,7 @@ public class Memory {
 		{
 			UnsignedNumber piece = new UnsignedNumber(val.getByte(i), 1);
 			mem.set(address.getVal(), piece);
+			changedAddresses.add(address.getVal());
 			address.inc();
 		}
 	}
@@ -56,7 +58,18 @@ public class Memory {
 		{
 			UnsignedNumber piece = new UnsignedNumber(val.getByte(i), 1);
 			mem.set(address, piece);
+			changedAddresses.add(address);
 			address++;
 		}
+	}
+	
+	public void clearUpdatedAddresses()
+	{
+		changedAddresses.clear();
+	}
+	
+	public Integer[] getUpdatedAddresses()
+	{
+		return (Integer[])changedAddresses.toArray();
 	}
 }

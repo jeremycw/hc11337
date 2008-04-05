@@ -18,10 +18,10 @@ package ca.hc11337.gui.statusline;
 
 import org.eclipse.jface.action.*;
 
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 
 
-public class HC11337StatusLine implements Managed {
+public class HC11337StatusLine implements Managable {
 
 	private StatusLineManager status = new StatusLineManager();
 	

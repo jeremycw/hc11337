@@ -23,11 +23,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 import ca.hc11337.gui.HC11337Controller;
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 import ca.hc11337.gui.actions.*;
 
 
-public class EditMenu implements Managed {
+public class EditMenu implements Managable {
 	private MenuManager menu = new MenuManager("&Edit");
 	public EditMenu(HC11337Controller controller)
 	{

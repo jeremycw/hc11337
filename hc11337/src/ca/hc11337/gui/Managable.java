@@ -14,8 +14,10 @@
     along with HC11337.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package ca.hc11337.app.core;
+package ca.hc11337.gui;
 
-public class WatchedMemManager {
+import org.eclipse.jface.action.*;
 
+public interface Managable {
+	public ContributionManager getManager();
 }

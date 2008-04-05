@@ -120,7 +120,7 @@ public class HC11337Controller implements Observer {
 	
 	public void step()
 	{
-		
+		model.execute();
 	}
 	
 	public void stop()
@@ -171,12 +171,12 @@ public class HC11337Controller implements Observer {
 	
 	public void undo()
 	{
-		
+		// TODO undo function
 	}
 	
 	public void redo()
 	{
-		
+		// TODO redo function
 	}
 	
 	public void build()
@@ -228,10 +228,11 @@ public class HC11337Controller implements Observer {
 	public void initCPUView()
 	{
 		String regNames[] = model.getRegisterNames();
+		int regValues[] = model.getRegisterValues();
 		String[][] regs = new String[2][regNames.length];
 		regs[0] = regNames;
-		for(int i = 0; i < regs[0].length; i++)
-			regs[1][i] = "0";
+		for(int i = 0; i < regValues.length; i++)
+			regs[1][i] = Integer.toHexString(regValues[i]);
 		view.setCPUData(regs);
 	}
 	

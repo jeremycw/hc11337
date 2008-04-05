@@ -26,7 +26,7 @@ import ca.hc11337.gui.*;
 import ca.hc11337.gui.actions.*;
 
 
-public class HC11337Toolbar implements Managed{
+public class HC11337Toolbar implements Managable{
 	private ToolBarManager tool_bar_manager;
 	public HC11337Toolbar(HC11337Controller controller, int style)
 	{

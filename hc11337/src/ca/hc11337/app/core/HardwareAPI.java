@@ -30,7 +30,7 @@ public class HardwareAPI {
 	
 	public int[] getRegisterValues()
 	{
-		return null;
+		return hardware.getRegisterValues();
 	}
 	
 	public Hashtable<Integer, Integer> getChangedMemoryValues()
@@ -51,5 +51,10 @@ public class HardwareAPI {
 	public void setRegister(int index, int value)
 	{
 		
+	}
+	
+	public void execute()
+	{
+		hardware.execute();
 	}
 }

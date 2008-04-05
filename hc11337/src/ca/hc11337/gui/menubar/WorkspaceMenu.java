@@ -21,9 +21,9 @@ import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.MenuManager;
 
 import ca.hc11337.gui.HC11337Controller;
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 
-public class WorkspaceMenu implements Managed{
+public class WorkspaceMenu implements Managable{
 	private MenuManager menu = new MenuManager("Workspace");
 	public WorkspaceMenu(HC11337Controller controller)
 	{

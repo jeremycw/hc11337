@@ -22,16 +22,12 @@ import java.awt.Point;
 
 public class HC11337Core extends Observable {
 	private Vector<Editor> editors = new Vector<Editor>();
-	private StackManager stackManager = new StackManager();
-	private MemoryManager memManager = new MemoryManager();
-	private CPUManager cpuManager = new CPUManager();
-	private WatchedMemManager watchedMemManager = new WatchedMemManager();
 	private ConsoleManager consoleManager = new ConsoleManager();
 	private HardwareAPI api = new HardwareAPI();
 	
 	public HC11337Core()
 	{
-		cpuManager.setRegisterNames(api.getRegisterNames());
+		
 	}
 	
 	//Editor stuff
@@ -84,23 +80,23 @@ public class HC11337Core extends Observable {
 	//Sim stuff
 	public String[] getRegisterNames()
 	{
-		return cpuManager.getRegisterNames();
+		return api.getRegisterNames();
 	}
 	
 	public int[] getRegisterValues()
 	{
-		return cpuManager.getRegisterValues();
+		return api.getRegisterValues();
 	}
 	
 	public void setRegisterValue(int index, int value)
 	{
-		cpuManager.setRegisterValue(index, value);
+		//cpuManager.setRegisterValue(index, value);
 	}
 	
 	public void loadS19(File file) throws FileNotFoundException
 	{
 		S19Processor processor = new S19Processor(file);
-		while(processor.hasNextLine())
+		do
 		{
 			int addr = processor.nextAddress();
 			int bc = processor.nextByteCount();
@@ -110,7 +106,7 @@ public class HC11337Core extends Observable {
 				api.setMemoryAt(addr, newByte);
 				addr++;
 			}
-		}
+		}while(processor.hasNextLine());
 		setChanged();
 		notifyObservers(2);
 	}
@@ -121,6 +117,13 @@ public class HC11337Core extends Observable {
 		for(int i = 0; i < 65536; i++)
 				memDump[i] = api.getMemoryAt(i);
 		return memDump;
+	}
+	
+	public void execute()
+	{
+		api.execute();
+		setChanged();
+		notifyObservers(3);
 	}
 	
 	

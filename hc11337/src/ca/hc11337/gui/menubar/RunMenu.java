@@ -23,11 +23,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 
 import ca.hc11337.gui.HC11337Controller;
-import ca.hc11337.gui.Managed;
+import ca.hc11337.gui.Managable;
 import ca.hc11337.gui.actions.*;
 
 
-public class RunMenu implements Managed{
+public class RunMenu implements Managable{
 	private MenuManager menu = new MenuManager("&Run");
 	public RunMenu(HC11337Controller controller)
 	{
