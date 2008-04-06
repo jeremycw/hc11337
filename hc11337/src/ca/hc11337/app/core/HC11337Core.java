@@ -111,6 +111,11 @@ public class HC11337Core extends Observable {
 		notifyObservers(2);
 	}
 	
+	public int[] getMemChanges()
+	{
+		return api.getChangedMemoryValues();
+	}
+	
 	public int[] getMemDump()
 	{
 		int[] memDump = new int[65536];
@@ -124,6 +129,11 @@ public class HC11337Core extends Observable {
 		api.execute();
 		setChanged();
 		notifyObservers(3);
+	}
+	
+	public int getMemoryAt(int index)
+	{
+		return api.getMemoryAt(index);
 	}
 	
 	

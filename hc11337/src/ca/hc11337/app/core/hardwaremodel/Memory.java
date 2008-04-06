@@ -68,8 +68,11 @@ public class Memory {
 		changedAddresses.clear();
 	}
 	
-	public Integer[] getUpdatedAddresses()
+	public int[] getUpdatedAddresses()
 	{
-		return (Integer[])changedAddresses.toArray();
+		int[] addr = new int[changedAddresses.size()];
+		for(int i = 0; i < changedAddresses.size(); i++)
+			addr[i] = changedAddresses.get(i);
+		return addr;
 	}
 }

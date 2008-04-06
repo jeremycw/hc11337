@@ -33,9 +33,9 @@ public class HardwareAPI {
 		return hardware.getRegisterValues();
 	}
 	
-	public Hashtable<Integer, Integer> getChangedMemoryValues()
+	public int[] getChangedMemoryValues()
 	{
-		return null;
+		return hardware.getMemoryUpdates();
 	}
 	
 	public void setMemoryAt(int index, int value)

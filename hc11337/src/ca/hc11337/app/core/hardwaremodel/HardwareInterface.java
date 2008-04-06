@@ -57,6 +57,7 @@ public class HardwareInterface
 	
 	public void execute()
 	{
+		mem.clearUpdatedAddresses();
 		cpu.executeInstruction();
 	}
 	
@@ -73,5 +74,10 @@ public class HardwareInterface
 	public int getMemory(int index)
 	{
 		return mem.read(index).getVal();
+	}
+	
+	public int[] getMemoryUpdates()
+	{
+		return mem.getUpdatedAddresses();
 	}
 }

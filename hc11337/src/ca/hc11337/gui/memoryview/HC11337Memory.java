@@ -75,6 +75,9 @@ public class HC11337Memory {
 	public void setMemoryCell(int row, int col, int value)
 	{
 		data[row][col] = value;
-		memViewer.refresh();
+		String num = Integer.toHexString(value);
+		if(num.length() == 1)
+			num = "0"+num;
+		memViewer.getTable().getItem(row).setText(col+1, num);
 	}
 }
