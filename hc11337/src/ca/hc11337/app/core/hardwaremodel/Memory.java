@@ -32,23 +32,24 @@ public class Memory {
 	
 	public UnsignedNumber read(int address)
 	{
-		return (UnsignedNumber)mem.get(address);
+		return (UnsignedNumber)mem.get(address).clone();
 	}
 	
 	
 	public UnsignedNumber read(UnsignedNumber address)
 	{
-		return mem.get(address.getVal());
+		return mem.get(address.getVal()).clone();
 	}
 	
 	public void write(UnsignedNumber address, UnsignedNumber val)
 	{
+		UnsignedNumber addr = address.clone();
 		for(int i = 0; i < val.getBytes(); i++)
 		{
 			UnsignedNumber piece = new UnsignedNumber(val.getByte(i), 1);
-			mem.set(address.getVal(), piece);
-			changedAddresses.add(address.getVal());
-			address.inc();
+			mem.set(addr.getVal(), piece);
+			changedAddresses.add(addr.getVal());
+			addr.inc();
 		}
 	}
 	

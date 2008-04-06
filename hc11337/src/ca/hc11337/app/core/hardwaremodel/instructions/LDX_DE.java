@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_18A7 implements Instruction 
+public class LDX_DE implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public STAA_18A7(CPU c, Memory m)
+	public LDX_DE(CPU c, Memory m)
 	{
 		cpu = c;
 		mem = m;
@@ -33,17 +33,16 @@ public class STAA_18A7 implements Instruction
 	{
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
 		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
+		UnsignedNumber op1 = mem.read(pc).clone();
 		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		mem.write(op, cpu.getReg(Reg.A).clone());
-		pc.inc();
-		int val = cpu.getReg(Reg.A).getVal();
+		UnsignedNumber op2 = new UnsignedNumber(0,1);
+		UnsignedNumber op3 = new UnsignedNumber(op2, op1);
+		cpu.setReg(Reg.X, mem.read(op3));
+		int val = cpu.getReg(Reg.X).getVal();
 		
 		//set ccr
 		cpu.setCC(CCR.V, false);
-		if(val > 127)
+		if(val > 32767)
 			cpu.setCC(CCR.N, true);
 		else
 			cpu.setCC(CCR.N, false);

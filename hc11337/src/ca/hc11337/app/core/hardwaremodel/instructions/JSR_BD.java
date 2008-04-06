@@ -33,15 +33,15 @@ public class JSR_BD implements Instruction
 	{
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
 		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
+		UnsignedNumber op1 = mem.read(pc).clone();
 		pc.inc();
+		UnsignedNumber op2 = mem.read(pc).clone();
+		pc.inc();
+		UnsignedNumber op3 = new UnsignedNumber(op1, op2);
 		UnsignedNumber sp = cpu.getReg(Reg.SP);
 		sp.sub(2);
-		pc.inc();
 		mem.write(sp, pc);
-		op.mul(0x100);
-		op.add(mem.read(pc));
-		pc.setVal(mem.read(op).getVal());
+		pc.setVal((op3).getVal());
 	}
 
 }

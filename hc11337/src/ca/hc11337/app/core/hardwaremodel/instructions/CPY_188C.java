@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_18A7 implements Instruction 
+public class CPY_188C implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public STAA_18A7(CPU c, Memory m)
+	public CPY_188C(CPU c, Memory m)
 	{
 		cpu = c;
 		mem = m;
@@ -33,17 +33,21 @@ public class STAA_18A7 implements Instruction
 	{
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
 		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
+		UnsignedNumber op1 = mem.read(pc).clone();
 		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		mem.write(op, cpu.getReg(Reg.A).clone());
+		UnsignedNumber op2 = mem.read(pc).clone();
 		pc.inc();
-		int val = cpu.getReg(Reg.A).getVal();
+		UnsignedNumber op3 = new UnsignedNumber(op1, op2);
+		UnsignedNumber y = cpu.getReg(Reg.Y).clone();
+		y.sub(op3);
+		int val = y.getVal();
 		
-		//set ccr
-		cpu.setCC(CCR.V, false);
-		if(val > 127)
+		//TODO set C ccr
+		if(y.overflow())
+			cpu.setCC(CCR.V, true);
+		else
+			cpu.setCC(CCR.V, false);
+		if(val > 32767)
 			cpu.setCC(CCR.N, true);
 		else
 			cpu.setCC(CCR.N, false);
@@ -51,6 +55,7 @@ public class STAA_18A7 implements Instruction
 			cpu.setCC(CCR.Z, true);
 		else
 			cpu.setCC(CCR.Z, false);
+		
 	}
 
 }

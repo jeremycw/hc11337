@@ -42,6 +42,31 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	public UnsignedNumber(UnsignedNumber... bytes)
+	{
+		this.bytes = bytes.length;
+		byteArray = new int[bytes.length];
+		String val = "";
+		for(int i = 0; i < bytes.length; i++){
+			byteArray[i] = bytes[i].getVal();
+			String byteString = Integer.toHexString(bytes[i].getVal());
+			if(byteString.length() == 1)
+				val += "0"+byteString;
+			else
+				val += byteString;
+		}
+
+		int value = Integer.parseInt(val, 16);
+		
+		int power = this.bytes * 2;
+		maxVal = (int)(Math.pow(16.0, (double)power) - 1.0);
+		
+		if(value > maxVal)
+			this.val = maxVal;
+		else
+			this.val = value;
+	}
+	
 	public void inc()
 	{
 		overflow = false;
@@ -54,7 +79,7 @@ public class UnsignedNumber implements Cloneable {
 			val = 0;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -72,7 +97,7 @@ public class UnsignedNumber implements Cloneable {
 			val = maxVal;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -90,7 +115,7 @@ public class UnsignedNumber implements Cloneable {
 			val += maxVal + 1;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -108,7 +133,7 @@ public class UnsignedNumber implements Cloneable {
 			val += maxVal + 1;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -127,7 +152,7 @@ public class UnsignedNumber implements Cloneable {
 			val = overFlow - 1;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -146,7 +171,7 @@ public class UnsignedNumber implements Cloneable {
 			val = overFlow - 1;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -164,7 +189,7 @@ public class UnsignedNumber implements Cloneable {
 			val = maxVal;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -182,7 +207,7 @@ public class UnsignedNumber implements Cloneable {
 			val = maxVal;
 			overflow = true;
 		}
-		if(ival < 128 && val >= 128)
+		if(ival < maxVal+1/2 && val >= maxVal+1/2)
 			tcOverflow = true;
 		
 		constructByteArray();
@@ -216,6 +241,10 @@ public class UnsignedNumber implements Cloneable {
 	public void setBytes(int bytes)
 	{
 		this.bytes = bytes;
+		int power = bytes * 2;
+		maxVal = (int)(Math.pow(16.0, (double)power) - 1.0);
+		byteArray = new int[bytes];
+		constructByteArray();
 	}
 	
 	public int getBytes()

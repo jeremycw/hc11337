@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_18A7 implements Instruction 
+public class RTS_39 implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public STAA_18A7(CPU c, Memory m)
+	public RTS_39(CPU c, Memory m)
 	{
 		cpu = c;
 		mem = m;
@@ -31,26 +31,14 @@ public class STAA_18A7 implements Instruction
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
-		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		mem.write(op, cpu.getReg(Reg.A).clone());
-		pc.inc();
-		int val = cpu.getReg(Reg.A).getVal();
-		
-		//set ccr
-		cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
+		cpu.getReg(Reg.PC).inc();
+		UnsignedNumber sp = cpu.getReg(Reg.SP);
+		UnsignedNumber op1 = mem.read(sp);
+		sp.inc();
+		UnsignedNumber op2 = mem.read(sp);
+		sp.inc();
+		UnsignedNumber op3 = new UnsignedNumber(op1, op2);
+		cpu.setReg(Reg.PC, op3);
 	}
 
 }

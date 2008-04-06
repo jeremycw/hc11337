@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_18A7 implements Instruction 
+public class CPY_18AC implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public STAA_18A7(CPU c, Memory m)
+	public CPY_18AC(CPU c, Memory m)
 	{
 		cpu = c;
 		mem = m;
@@ -37,13 +37,16 @@ public class STAA_18A7 implements Instruction
 		pc.inc();
 		op.setBytes(2);
 		op.add(cpu.getReg(Reg.Y));
-		mem.write(op, cpu.getReg(Reg.A).clone());
-		pc.inc();
-		int val = cpu.getReg(Reg.A).getVal();
+		UnsignedNumber y = cpu.getReg(Reg.Y).clone();
+		y.sub(op);
+		int val = y.getVal();
 		
-		//set ccr
-		cpu.setCC(CCR.V, false);
-		if(val > 127)
+		//TODO set C ccr
+		if(y.overflow())
+			cpu.setCC(CCR.V, true);
+		else
+			cpu.setCC(CCR.V, false);
+		if(val > 32767)
 			cpu.setCC(CCR.N, true);
 		else
 			cpu.setCC(CCR.N, false);

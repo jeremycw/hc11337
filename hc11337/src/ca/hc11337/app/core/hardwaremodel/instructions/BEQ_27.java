@@ -34,13 +34,9 @@ public class BEQ_27 implements Instruction
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
 		pc.inc();
 		byte op = (byte)mem.read(pc).getVal();
+		pc.inc();
 		if(cpu.getCC(CCR.Z))
-		{
-			pc.dec();
 			pc.add((int)op);
-		}
-		else
-			pc.inc();
 	}
 
 }

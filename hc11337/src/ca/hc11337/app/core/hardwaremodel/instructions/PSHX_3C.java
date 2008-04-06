@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_18A7 implements Instruction 
+public class PSHX_3C implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public STAA_18A7(CPU c, Memory m)
+	public PSHX_3C(CPU c, Memory m)
 	{
 		cpu = c;
 		mem = m;
@@ -31,18 +31,17 @@ public class STAA_18A7 implements Instruction
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
-		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		mem.write(op, cpu.getReg(Reg.A).clone());
-		pc.inc();
-		int val = cpu.getReg(Reg.A).getVal();
+		cpu.getReg(Reg.PC).inc();
+		UnsignedNumber sp = cpu.getReg(Reg.SP);
+		sp.sub(2);
+		mem.write(sp, cpu.getReg(Reg.X));
+		int val = cpu.getReg(Reg.X).getVal();
 		
-		//set ccr
-		cpu.setCC(CCR.V, false);
+		//TODO set ccr
+		if(cpu.getReg(Reg.A).overflow())
+			cpu.setCC(CCR.V, true);
+		else
+			cpu.setCC(CCR.V, false);
 		if(val > 127)
 			cpu.setCC(CCR.N, true);
 		else

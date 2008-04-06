@@ -39,8 +39,7 @@ public class CPU
 		registers.add(new UnsignedNumber(0,2));
 		registers.add(new UnsignedNumber(0,2));
 		registers.add(new UnsignedNumber(0xC000,2));
-		registers.add(new UnsignedNumber(0xFFFF,2));
-		
+		registers.add(new UnsignedNumber(0,2));
 		//TODO initialize instructionSet
 		instructionSet.put(0x1B, new ABA_1B(this, mem));
 		instructionSet.put(0x3A, new ABX_3A(this, mem));
@@ -54,6 +53,11 @@ public class CPU
 		instructionSet.put(0x25, new BLO_25(this, mem));
 		instructionSet.put(0x23, new BLS_23(this, mem));
 		instructionSet.put(0x20, new BRA_20(this, mem));
+		instructionSet.put(0x188C, new CPY_188C(this, mem));
+		instructionSet.put(0x189C, new CPY_189C(this, mem));
+		instructionSet.put(0x18AC, new CPY_18AC(this, mem));
+		instructionSet.put(0x18BC, new CPY_18BC(this, mem));
+		instructionSet.put(0x1AAC, new CPY_1AAC(this, mem));
 		instructionSet.put(0x4A, new DECA_4A(this, mem));
 		instructionSet.put(0x9D, new JSR_9D(this, mem));
 		instructionSet.put(0xBD, new JSR_BD(this, mem));
@@ -62,11 +66,27 @@ public class CPU
 		instructionSet.put(0x96, new LDAA_96(this, mem));
 		instructionSet.put(0xA6, new LDAA_A6(this, mem));
 		instructionSet.put(0xB6, new LDAA_B6(this, mem));
+		instructionSet.put(0xCDEE, new LDX_CDEE(this, mem));
+		instructionSet.put(0xDE, new LDX_DE(this, mem));
+		instructionSet.put(0xCE, new LDX_CE(this, mem));
+		instructionSet.put(0xEE, new LDX_EE(this, mem));
+		instructionSet.put(0xFE, new LDX_FE(this, mem));
+		instructionSet.put(0x18CE, new LDY_18CE(this, mem));
+		instructionSet.put(0x18DE, new LDY_18DE(this, mem));
+		instructionSet.put(0x18EE, new LDY_18EE(this, mem));
+		instructionSet.put(0x18FE, new LDY_18FE(this, mem));
+		instructionSet.put(0x1AEE, new LDY_1AEE(this, mem));
+		instructionSet.put(0x3C, new PSHX_3C(this, mem));
+		instructionSet.put(0x183C, new PSHY_183C(this, mem));
+		instructionSet.put(0x38, new PULX_38(this, mem));
+		instructionSet.put(0x39, new RTS_39(this, mem));
+		instructionSet.put(0x30, new TSX_30(this, mem));
+		instructionSet.put(0x1830, new TSY_1830(this, mem));
 		instructionSet.put(0xB7, new STAA_B7(this, mem));
 		instructionSet.put(0x18A7, new STAA_18A7(this, mem));
 		instructionSet.put(0x97, new STAA_97(this, mem));
 		instructionSet.put(0xA7, new STAA_A7(this, mem));
-		instructionSet.put(0xB7, new STAA_B7(this, mem));
+		instructionSet.put(0x97, new STAA_97(this, mem));
 		
 	}
 	
@@ -99,16 +119,19 @@ public class CPU
 		{
 		case 0x18:
 			pc.inc();
+			opcode.setBytes(2);
 			opcode.mul(0x100);
 			opcode.add(mem.read(pc));
 			break;
 		case 0x1A:
 			pc.inc();
+			opcode.setBytes(2);
 			opcode.mul(0x100);
 			opcode.add(mem.read(pc));
 			break;
 		case 0xCD:
 			pc.inc();
+			opcode.setBytes(2);
 			opcode.mul(0x100);
 			opcode.add(mem.read(pc));
 			break;
