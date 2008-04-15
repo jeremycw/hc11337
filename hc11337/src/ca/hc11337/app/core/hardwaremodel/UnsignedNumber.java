@@ -233,6 +233,11 @@ public class UnsignedNumber implements Cloneable {
 		return tcOverflow;
 	}
 	
+	public boolean carry()
+	{
+		return overflow;
+	}
+	
 	public UnsignedNumber clone()
 	{
 		return new UnsignedNumber(this.val, this.bytes);

@@ -41,6 +41,17 @@ public class Memory {
 		return mem.get(address.getVal()).clone();
 	}
 	
+	public UnsignedNumber read(UnsignedNumber address, int bytes)
+	{
+		UnsignedNumber[] byteArray = new UnsignedNumber[bytes];
+		for(int i = 0; i < bytes; i++)
+		{
+			byteArray[i] = read(address);
+			address.inc();
+		}
+		return new UnsignedNumber(byteArray);
+	}
+	
 	public void write(UnsignedNumber address, UnsignedNumber val)
 	{
 		UnsignedNumber addr = address.clone();

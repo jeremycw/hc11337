@@ -39,21 +39,6 @@ public class PULX_38 implements Instruction
 		sp.inc();
 		UnsignedNumber data = new UnsignedNumber(piece1, piece2);
 		cpu.setReg(Reg.X, data);
-		int val = cpu.getReg(Reg.X).getVal();
-		
-		//TODO set ccr
-		if(cpu.getReg(Reg.A).overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

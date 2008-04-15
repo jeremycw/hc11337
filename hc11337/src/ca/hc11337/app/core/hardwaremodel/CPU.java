@@ -25,7 +25,7 @@ import ca.hc11337.app.core.hardwaremodel.instructions.*;
 public class CPU
 {
 	private Memory mem;
-	private boolean ccr[] = new boolean[7];
+	private boolean ccr[] = new boolean[8];
 	private Vector<UnsignedNumber> registers = new Vector<UnsignedNumber>();
 	private Hashtable<Integer, Instruction> instructionSet = new Hashtable<Integer, Instruction>();
 	

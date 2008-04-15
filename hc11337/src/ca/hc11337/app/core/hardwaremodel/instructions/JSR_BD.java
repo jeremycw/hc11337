@@ -18,13 +18,14 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class JSR_BD implements Instruction 
+public class JSR_BD extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public JSR_BD(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
@@ -32,16 +33,11 @@ public class JSR_BD implements Instruction
 	public void exec()
 	{
 		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op1 = mem.read(pc).clone();
-		pc.inc();
-		UnsignedNumber op2 = mem.read(pc).clone();
-		pc.inc();
-		UnsignedNumber op3 = new UnsignedNumber(op1, op2);
+		UnsignedNumber op = extended();
 		UnsignedNumber sp = cpu.getReg(Reg.SP);
 		sp.sub(2);
 		mem.write(sp, pc);
-		pc.setVal((op3).getVal());
+		pc.setVal((op).getVal());
 	}
 
 }

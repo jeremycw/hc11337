@@ -33,18 +33,8 @@ public class STX_EF extends HC11Instruction implements Instruction
 	public void exec()
 	{
 		mem.write(indirectX(), cpu.getReg(Reg.X).clone());
-		int val = cpu.getReg(Reg.X).getVal();
-		
-		//set ccr
+		calcConditionCodes(cpu.getReg(Reg.X), CCR.N, CCR.Z);
 		cpu.setCC(CCR.V, false);
-		if(val > 32767)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

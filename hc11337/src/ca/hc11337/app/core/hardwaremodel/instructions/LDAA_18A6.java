@@ -34,18 +34,8 @@ public class LDAA_18A6 extends HC11Instruction implements Instruction
 	public void exec()
 	{
 		cpu.setReg(Reg.A, mem.read(indirectY()));
-		int val = cpu.getReg(Reg.A).getVal();
-		
-		//set ccr
+		calcConditionCodes(cpu.getReg(Reg.A), CCR.N, CCR.Z);
 		cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

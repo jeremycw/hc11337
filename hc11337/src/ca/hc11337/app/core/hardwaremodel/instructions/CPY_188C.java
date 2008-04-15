@@ -34,22 +34,7 @@ public class CPY_188C extends HC11Instruction implements Instruction
 	{
 		UnsignedNumber y = cpu.getReg(Reg.Y).clone();
 		y.sub(immediate(2));
-		int val = y.getVal();
-		
-		//TODO set C ccr
-		if(y.overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 32767)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
-		
+		calcConditionCodes(y, CCR.N, CCR.V, CCR.Z, CCR.C);
 	}
 
 }

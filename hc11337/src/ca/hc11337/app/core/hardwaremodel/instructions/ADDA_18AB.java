@@ -33,21 +33,7 @@ public class ADDA_18AB extends HC11Instruction implements Instruction
 	public void exec()
 	{
 		cpu.getReg(Reg.A).add(mem.read(indirectY()));
-		int val = cpu.getReg(Reg.A).getVal();
-		
-		//set ccr
-		if(cpu.getReg(Reg.A).overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
+		calcConditionCodes(cpu.getReg(Reg.A), CCR.H, CCR.N, CCR.Z, CCR.V, CCR.C);
 	}
 
 }

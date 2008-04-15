@@ -35,21 +35,6 @@ public class PSHY_183C implements Instruction
 		UnsignedNumber sp = cpu.getReg(Reg.SP);
 		sp.sub(2);
 		mem.write(sp, cpu.getReg(Reg.Y));
-		int val = cpu.getReg(Reg.Y).getVal();
-		
-		//TODO set ccr
-		if(cpu.getReg(Reg.A).overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

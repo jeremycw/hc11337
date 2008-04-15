@@ -33,18 +33,8 @@ public class STAA_B7 extends HC11Instruction implements Instruction
 	public void exec()
 	{
 		mem.write(extended(), cpu.getReg(Reg.A).clone());
-		int val = cpu.getReg(Reg.A).getVal();
-		
-		//set ccr
+		calcConditionCodes(cpu.getReg(Reg.A), CCR.N, CCR.Z);
 		cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

@@ -33,21 +33,6 @@ public class TSX_30 implements Instruction
 	{
 		cpu.getReg(Reg.PC).inc();
 		cpu.setReg(Reg.X, cpu.getReg(Reg.SP).clone());
-		int val = cpu.getReg(Reg.X).getVal();
-		
-		//TODO set ccr
-		if(cpu.getReg(Reg.A).overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

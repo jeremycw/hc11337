@@ -32,19 +32,9 @@ public class LDY_18DE extends HC11Instruction implements Instruction
 	
 	public void exec()
 	{
-		cpu.setReg(Reg.Y, read(direct(), 2));
-		int val = cpu.getReg(Reg.Y).getVal();
-		
-		//set ccr
+		cpu.setReg(Reg.Y, mem.read(direct(), 2));
+		calcConditionCodes(cpu.getReg(Reg.Y), CCR.N, CCR.Z);
 		cpu.setCC(CCR.V, false);
-		if(val > 32767)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }

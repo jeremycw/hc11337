@@ -33,21 +33,6 @@ public class TSY_1830 implements Instruction
 	{
 		cpu.getReg(Reg.PC).inc();
 		cpu.setReg(Reg.Y, cpu.getReg(Reg.SP).clone());
-		int val = cpu.getReg(Reg.Y).getVal();
-		
-		//TODO set ccr
-		if(cpu.getReg(Reg.A).overflow())
-			cpu.setCC(CCR.V, true);
-		else
-			cpu.setCC(CCR.V, false);
-		if(val > 127)
-			cpu.setCC(CCR.N, true);
-		else
-			cpu.setCC(CCR.N, false);
-		if(val == 0)
-			cpu.setCC(CCR.Z, true);
-		else
-			cpu.setCC(CCR.Z, false);
 	}
 
 }
