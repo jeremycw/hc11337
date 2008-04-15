@@ -18,26 +18,21 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class ADDA_18AB implements Instruction 
+public class ADDA_18AB extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public ADDA_18AB(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		cpu.getReg(Reg.A).add(mem.read(op));
-		pc.inc();
+		cpu.getReg(Reg.A).add(mem.read(indirectY()));
 		int val = cpu.getReg(Reg.A).getVal();
 		
 		//set ccr

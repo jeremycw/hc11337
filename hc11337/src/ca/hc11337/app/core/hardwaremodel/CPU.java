@@ -87,6 +87,10 @@ public class CPU
 		instructionSet.put(0x97, new STAA_97(this, mem));
 		instructionSet.put(0xA7, new STAA_A7(this, mem));
 		instructionSet.put(0x97, new STAA_97(this, mem));
+		instructionSet.put(0xCDEF, new STX_CDEF(this, mem));
+		instructionSet.put(0xDF, new STX_DF(this, mem));
+		instructionSet.put(0xEF, new STX_EF(this, mem));
+		instructionSet.put(0xFF, new STX_FF(this, mem));
 		
 	}
 	

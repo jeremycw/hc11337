@@ -18,30 +18,21 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class LDX_CDEE implements Instruction 
+public class LDX_CDEE extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public LDX_CDEE(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc);
-		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.Y));
-		UnsignedNumber piece1 = mem.read(op);
-		op.inc();
-		UnsignedNumber piece2 = mem.read(op);
-		UnsignedNumber data = new UnsignedNumber(piece1, piece2);
-		cpu.setReg(Reg.X, data);
+		cpu.setReg(Reg.X, read(indirectY(), 2));
 		int val = cpu.getReg(Reg.X).getVal();
 		
 		//set ccr

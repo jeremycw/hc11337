@@ -18,30 +18,24 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class LDX_CE implements Instruction 
+public class LDX_CE extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public LDX_CE(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op1 = mem.read(pc).clone();
-		pc.inc();
-		UnsignedNumber op2 = mem.read(pc).clone();
-		pc.inc();
-		UnsignedNumber op3 = new UnsignedNumber(op1, op2);
-		cpu.setReg(Reg.X, op3);
+		cpu.setReg(Reg.X, immediate(2));
 		int val = cpu.getReg(Reg.X).getVal();
 		
-		//TODO set ccr
+		//set ccr
 		cpu.setCC(CCR.V, false);
 		if(val > 32767)
 			cpu.setCC(CCR.N, true);

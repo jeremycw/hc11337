@@ -18,24 +18,21 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_97 implements Instruction 
+public class STAA_97 extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public STAA_97(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc);
-		mem.write(op, cpu.getReg(Reg.A).clone());
-		pc.inc();
+		mem.write(direct(), cpu.getReg(Reg.A).clone());
 		int val = cpu.getReg(Reg.A).getVal();
 		
 		//set ccr

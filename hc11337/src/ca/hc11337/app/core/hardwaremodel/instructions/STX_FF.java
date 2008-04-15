@@ -18,12 +18,12 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class LDAA_96 extends HC11Instruction implements Instruction 
+public class STX_FF extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
-	public LDAA_96(CPU c, Memory m)
+	public STX_FF(CPU c, Memory m)
 	{
 		super(c, m);
 		cpu = c;
@@ -32,12 +32,12 @@ public class LDAA_96 extends HC11Instruction implements Instruction
 	
 	public void exec()
 	{
-		cpu.setReg(Reg.A, mem.read(direct()));
-		int val = cpu.getReg(Reg.A).getVal();
+		mem.write(extended(), cpu.getReg(Reg.X).clone());
+		int val = cpu.getReg(Reg.X).getVal();
 		
 		//set ccr
 		cpu.setCC(CCR.V, false);
-		if(val > 127)
+		if(val > 32767)
 			cpu.setCC(CCR.N, true);
 		else
 			cpu.setCC(CCR.N, false);

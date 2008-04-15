@@ -18,30 +18,21 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class LDY_1AEE implements Instruction 
+public class LDY_1AEE extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public LDY_1AEE(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc);
-		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.X));
-		UnsignedNumber piece1 = mem.read(op);
-		op.inc();
-		UnsignedNumber piece2 = mem.read(op);
-		UnsignedNumber data = new UnsignedNumber(piece1, piece2);
-		cpu.setReg(Reg.Y, data);
+		cpu.setReg(Reg.Y, read(indirectX(), 2));
 		int val = cpu.getReg(Reg.Y).getVal();
 		
 		//set ccr

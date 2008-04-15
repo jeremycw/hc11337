@@ -18,27 +18,22 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class CPY_1AAC implements Instruction 
+public class CPY_1AAC extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public CPY_1AAC(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
-		pc.inc();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.X));
 		UnsignedNumber y = cpu.getReg(Reg.Y).clone();
-		y.sub(op);
+		y.sub(read(indirectX(), 2));
 		int val = y.getVal();
 		
 		//TODO set C ccr
@@ -54,6 +49,7 @@ public class CPY_1AAC implements Instruction
 			cpu.setCC(CCR.Z, true);
 		else
 			cpu.setCC(CCR.Z, false);
+		
 	}
 
 }

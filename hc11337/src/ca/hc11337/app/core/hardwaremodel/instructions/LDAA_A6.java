@@ -18,26 +18,21 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class LDAA_A6 implements Instruction 
+public class LDAA_A6 extends HC11Instruction implements Instruction 
 {
 	private CPU cpu;
 	private Memory mem;
 	
 	public LDAA_A6(CPU c, Memory m)
 	{
+		super(c, m);
 		cpu = c;
 		mem = m;
 	}
 	
 	public void exec()
 	{
-		UnsignedNumber pc = cpu.getReg(Reg.PC);
-		pc.inc();
-		UnsignedNumber op = mem.read(pc).clone();
-		op.setBytes(2);
-		op.add(cpu.getReg(Reg.X));
-		cpu.setReg(Reg.A, mem.read(op).clone());
-		pc.inc();
+		cpu.setReg(Reg.A, mem.read(indirectX()));
 		int val = cpu.getReg(Reg.A).getVal();
 		
 		//set ccr
