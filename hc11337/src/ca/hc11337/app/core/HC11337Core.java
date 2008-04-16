@@ -90,7 +90,9 @@ public class HC11337Core extends Observable {
 	
 	public void setRegisterValue(int index, int value)
 	{
-		//cpuManager.setRegisterValue(index, value);
+		api.setRegister(index, value);
+		setChanged();
+		notifyObservers(3);
 	}
 	
 	public void loadS19(File file) throws FileNotFoundException

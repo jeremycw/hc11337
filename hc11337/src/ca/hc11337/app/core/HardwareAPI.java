@@ -50,7 +50,7 @@ public class HardwareAPI {
 	
 	public void setRegister(int index, int value)
 	{
-		
+		hardware.setReg(index, value);
 	}
 	
 	public void execute()

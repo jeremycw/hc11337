@@ -14,30 +14,28 @@
     along with HC11337.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package ca.hc11337.gui.actions;
+package ca.hc11337.app.core.hardwaremodel.instructions;
 
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.resource.*;
-import org.eclipse.swt.graphics.Image;
+import ca.hc11337.app.core.hardwaremodel.*;
 
-import ca.hc11337.gui.HC11337Controller;
-
-public class Reset extends Action {
-	private HC11337Controller controller;
+public class PULB_33 implements Instruction 
+{
+	private CPU cpu;
+	private Memory mem;
 	
-	public Reset(HC11337Controller controller)
+	public PULB_33(CPU c, Memory m)
 	{
-		super("R&eset       @F7", AS_PUSH_BUTTON);
-		setToolTipText("Reset");
-		Image descriptor = new Image(null, "icons/refresh.png");
-		setImageDescriptor(ImageDescriptor.createFromImage(descriptor));
-		this.controller = controller;
+		cpu = c;
+		mem = m;
 	}
 	
-	public void run()
+	public void exec()
 	{
-		controller.reset();
+		cpu.getReg(Reg.PC).inc();
+		UnsignedNumber sp = cpu.getReg(Reg.SP);
+		UnsignedNumber data = mem.read(sp);
+		sp.inc();
+		cpu.setReg(Reg.B, data);
 	}
-	
 
 }

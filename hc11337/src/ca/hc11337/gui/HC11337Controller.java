@@ -27,6 +27,7 @@ public class HC11337Controller implements Observer {
 	private final HC11337GUI view;
 	private final HC11337Core model;
 	private int newFileCount = 0;
+	private long consoleBytes = 0;
 	
 	public HC11337Controller(HC11337GUI gui, HC11337Core core)
 	{
@@ -161,7 +162,8 @@ public class HC11337Controller implements Observer {
 	
 	public void reset()
 	{
-		
+		model.setRegisterValue(6, 0);
+		model.setRegisterValue(5, 0xC000);
 	}
 	
 	public void deepReset()
@@ -189,9 +191,7 @@ public class HC11337Controller implements Observer {
 				Process asm = Runtime.getRuntime().exec("./as11 " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
 				Scanner console = new Scanner(asm.getInputStream());
 				while(console.hasNext())
-				{
 					view.setConsoleText(view.getConsoleText()+console.nextLine()+'\n');
-				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
