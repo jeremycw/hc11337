@@ -27,7 +27,6 @@ public class HC11337Controller implements Observer {
 	private final HC11337GUI view;
 	private final HC11337Core model;
 	private int newFileCount = 0;
-	private long consoleBytes = 0;
 	
 	public HC11337Controller(HC11337GUI gui, HC11337Core core)
 	{
@@ -37,6 +36,9 @@ public class HC11337Controller implements Observer {
 		model.addObserver(this);
 	}
 	
+	/**
+	 * Governs the "New File" user action
+	 */
 	public void newFile()
 	{
 		try{
@@ -49,6 +51,9 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Governs the "Close File" user action
+	 */
 	public void closeFile()
 	{
 		int index = view.indexOfCurrentEditor();
@@ -59,6 +64,9 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Governs the "Close All" user action
+	 */
 	public void closeAll()
 	{
 		int numberOfTabs = view.getNumberOfTabs();
@@ -69,6 +77,11 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Loads a binary file into memory
+	 * 
+	 * @param file Binary file
+	 */
 	public void loadBinary(File file)
 	{
 		try{
@@ -78,6 +91,11 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Governs the "Open File" user action
+	 * 
+	 * @param file Source file
+	 */
 	public void openFile(File file)
 	{
 		try{
@@ -94,11 +112,9 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
-	public void openFile()
-	{
-		
-	}
-	
+	/**
+	 * Governs the "Save File" user action
+	 */
 	public void saveFile()
 	{
 		try{
@@ -114,26 +130,41 @@ public class HC11337Controller implements Observer {
 		
 	}
 	
+	/**
+	 * Governs the "Run" user action
+	 */
 	public void run()
 	{
 		view.setCPURegister(0, 12);
 	}
 	
+	/**
+	 * Governs the "Step" user action
+	 */
 	public void step()
 	{
 		model.execute();
 	}
 	
+	/**
+	 * Governs the "Stop" user action
+	 */
 	public void stop()
 	{
 		
 	}
 	
+	/**
+	 * Governs the "Delete" user action
+	 */
 	public void delete()
 	{
 		
 	}
 	
+	/**
+	 * Governs the "Cut" user action
+	 */
 	public void cut()
 	{
 		if(view.getNumberOfTabs() > 0)
@@ -145,12 +176,18 @@ public class HC11337Controller implements Observer {
 			}
 	}
 	
+	/**
+	 * Governs the "Copy" user action
+	 */
 	public void copy()
 	{
 		if(view.getNumberOfTabs() > 0)
 			view.getCurrentEditor().copy();
 	}
 	
+	/**
+	 * Governs the "Paste" user action
+	 */
 	public void paste()
 	{
 		if(view.getNumberOfTabs() > 0){
@@ -160,27 +197,42 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Governs the "Reset" user action
+	 */
 	public void reset()
 	{
 		model.setRegisterValue(6, 0);
 		model.setRegisterValue(5, 0xC000);
 	}
 	
+	/**
+	 * Governs the "Deep Reset" user action
+	 */
 	public void deepReset()
 	{
 		
 	}
 	
+	/**
+	 * Governs the "Undo" user action
+	 */
 	public void undo()
 	{
 		// TODO undo function
 	}
 	
+	/**
+	 * Governs the "Redo" user action
+	 */
 	public void redo()
 	{
 		// TODO redo function
 	}
 	
+	/**
+	 * Governs the "Build" user action
+	 */
 	public void build()
 	{
 		saveFile();
@@ -188,16 +240,20 @@ public class HC11337Controller implements Observer {
 		try{
 			if(view.getNumberOfTabs() > 0)
 			{
-				Process asm = Runtime.getRuntime().exec("./as11 " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
+				Process asm = Runtime.getRuntime().exec("as11 " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
 				Scanner console = new Scanner(asm.getInputStream());
+				view.setConsoleText("");
 				while(console.hasNext())
 					view.setConsoleText(view.getConsoleText()+console.nextLine()+'\n');
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+		}catch(Throwable t){
+			t.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Highlights syntax around the caret (as you type highlighting)
+	 */
 	public void highlightAtCaret()
 	{
 		model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
@@ -214,17 +270,26 @@ public class HC11337Controller implements Observer {
 		}
 	}
 	
+	/**
+	 * Highlights syntax in the entire file
+	 */
 	public void highlightSyntax()
 	{
 		//view.getCurrentEditor().setText(model.getText(view.indexOfCurrentEditor()));
 		view.getCurrentEditor().highlightSyntax(model.getHighlightRanges(view.indexOfCurrentEditor()));
 	}
 	
+	/**
+	 * Governs the "Select All" user action
+	 */
 	public void selectAll()
 	{
 		view.getCurrentEditor().selectAll();
 	}
 	
+	/**
+	 * Sets up the CPU GUI
+	 */
 	public void initCPUView()
 	{
 		String regNames[] = model.getRegisterNames();
@@ -236,6 +301,9 @@ public class HC11337Controller implements Observer {
 		view.setCPUData(regs);
 	}
 	
+	/**
+	 * Sets up the Memory Tab GUI
+	 */
 	public void initMemTab()
 	{
 		int mem[] = model.getMemDump();

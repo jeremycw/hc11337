@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class ABY_183A implements Instruction 
+public class ABY_183A implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

@@ -14,27 +14,10 @@
     along with HC11337.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package ca.hc11337.app.core.hardwaremodel.instructions;
+package ca.hc11337.app.core.hardwaremodel;
 
-import ca.hc11337.app.core.hardwaremodel.*;
-
-public class LDX_CE extends Instruction implements Executable 
+public interface Executable
 {
-	private CPU cpu;
-	private Memory mem;
-	
-	public LDX_CE(CPU c, Memory m)
-	{
-		super(c, m);
-		cpu = c;
-		mem = m;
-	}
-	
-	public void exec()
-	{
-		cpu.setReg(Reg.X, immediate(2));
-		calcConditionCodes(cpu.getReg(Reg.X), CCR.N, CCR.Z);
-		cpu.setCC(CCR.V, false);
-	}
+	public void exec();
 
 }

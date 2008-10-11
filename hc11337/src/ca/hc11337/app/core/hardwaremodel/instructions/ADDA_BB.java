@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class ADDA_BB extends HC11Instruction implements Instruction 
+public class ADDA_BB extends Instruction implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

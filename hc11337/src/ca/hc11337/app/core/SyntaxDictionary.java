@@ -42,6 +42,12 @@ public class SyntaxDictionary {
 		Collections.sort(tokens);
 	}
 	
+	/**
+	 * Checks if a word is in the dictionary
+	 * 
+	 * @param word
+	 * @return
+	 */
 	public boolean checkFor(String word)
 	{
 		if(Collections.binarySearch(tokens, word) >= 0)
@@ -50,6 +56,11 @@ public class SyntaxDictionary {
 			return false;
 	}
 	
+	/**
+	 * Returns a collection of the words in the dictionary
+	 * 
+	 * @return
+	 */
 	public Vector<String> getVector()
 	{
 		return tokens;

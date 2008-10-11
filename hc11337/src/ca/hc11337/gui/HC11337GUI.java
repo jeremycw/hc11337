@@ -60,6 +60,9 @@ public class HC11337GUI implements Observer {
 		createContents();
 	}
 	
+	/**
+	 * Draws the GUI
+	 */
 	private void createContents()
 	{
 		sashMain = new SashForm(parent, SWT.HORIZONTAL | SWT.NULL);
@@ -93,63 +96,123 @@ public class HC11337GUI implements Observer {
 		sashEdit.setWeights(new int[] {5,3});
 	}
 	
+	/**
+	 * Creates a new editor tab
+	 * 
+	 * @param name Label for the tab
+	 */
 	public void newEditorTab(String name)
 	{
 		editors.add(new HC11337Editor(editFolder, name, controller, SWT.MULTI));
 		sashEdit.setWeights(new int[] {5,3});
 	}
 	
+	/**
+	 * Removes an editor tab
+	 * 
+	 * @param index Index of the tab
+	 */
 	public void removeEditorTab(int index)
 	{
 		editors.get(index).dispose();
 		editors.remove(index);
 	}
 	
+	/**
+	 * Sets the display text in the editor text box
+	 * 
+	 * @param text
+	 */
 	public void setEditorText(String text)
 	{
 		editors.get(indexOfCurrentEditor()).setText(text);
 	}
 	
+	/**
+	 * Gets the editor that is currently selected
+	 * 
+	 * @return View of the editor
+	 */
 	public HC11337Editor getCurrentEditor()
 	{
 		return editors.get(indexOfCurrentEditor());
 	}
 	
+	/**
+	 * Gets the index of the current editor
+	 * 
+	 * @return Index
+	 */
 	public int indexOfCurrentEditor()
 	{
 		return editFolder.getSelectionIndex();
 	}
 	
+	/**
+	 * Gets the total number of open editor tabs
+	 * 
+	 * @return Number of tabs
+	 */
 	public int getNumberOfTabs()
 	{
 		return editFolder.getItemCount();
 	}
 	
+	/**
+	 * Switches the current editor
+	 * 
+	 * @param index Index of the editor to switch to
+	 */
 	public void switchEditor(int index)
 	{
 		editFolder.setSelection(index);
 	}
 	
+	/**
+	 * Switch between the console tab and the memory tab
+	 * 
+	 * @param index
+	 */
 	public void switchCurrentConsole(int index)
 	{
 		tabFolder.setSelection(index);
 	}
 	
+	/**
+	 * Get the text from the console
+	 * 
+	 * @return Console text
+	 */
 	public String getConsoleText()
 	{
 		return console.getText();
 	}
 	
+	/**
+	 * Sets the console text
+	 * 
+	 * @param text
+	 */
 	public void setConsoleText(String text)
 	{
 		console.setText(text);
 	}
 	
+	/**
+	 * Sets the values displayed in the CPU view
+	 * 
+	 * @param reg 2D string array with register names in the first column and the values in the second
+	 */
 	public void setCPUData(String[][] reg)
 	{
 		cpuView.setData(reg);
 	}
 	
+	/**
+	 * Sets the values displayed in the memory tab
+	 * 
+	 * @param memory All memory values
+	 */
 	public void setMemData(int[] memory)
 	{
 		int[][] memDump = new int[4096][16];
@@ -159,6 +222,12 @@ public class HC11337GUI implements Observer {
 		mem.setData(memDump);
 	}
 	
+	/**
+	 * Sets the displayed value of a specific cpu register
+	 * 
+	 * @param index
+	 * @param value
+	 */
 	public void setCPURegister(int index, int value)
 	{
 		cpuView.setRegister(index, value);
@@ -169,31 +238,12 @@ public class HC11337GUI implements Observer {
 		
 	}
 	
-	public void updateEditor(int index)
-	{
-		
-	}
-	
-	public void updateConsole()
-	{
-		
-	}
-	
-	public void updateMem(Vector<Point> updates)
-	{
-		
-	}
-	
-	public void updateStack()
-	{
-		
-	}
-	
-	public void updateCPU(int index)
-	{
-		
-	}
-	
+	/**
+	 * Checks if an editor already exists
+	 * 
+	 * @param name Label of the tab to look for
+	 * @return Index of the tab if found -1 if not
+	 */
 	public int checkIfOpen(String name)
 	{
 		for(int i = 0; i < getNumberOfTabs(); i++)

@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class RTS_39 implements Instruction 
+public class RTS_39 implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

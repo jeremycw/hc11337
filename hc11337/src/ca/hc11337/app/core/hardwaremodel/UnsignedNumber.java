@@ -26,6 +26,11 @@ public class UnsignedNumber implements Cloneable {
 	protected boolean overflow = false;
 	protected boolean tcOverflow = false;
 	
+	/**
+	 * 
+	 * @param value Value to give the unsigned number
+	 * @param bytes The number of bytes to use to hold this value
+	 */
 	public UnsignedNumber(int value, int bytes)
 	{
 		this.bytes = bytes;
@@ -67,6 +72,9 @@ public class UnsignedNumber implements Cloneable {
 			this.val = value;
 	}
 	
+	/**
+	 * Increment unsigned number
+	 */
 	public void inc()
 	{
 		overflow = false;
@@ -85,6 +93,9 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Decrement unsigned number
+	 */
 	public void dec()
 	{
 		overflow = false;
@@ -103,6 +114,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Subtract from unsigned number
+	 * 
+	 * @param a value to subtract
+	 */
 	public void sub(int a)
 	{
 		overflow = false;
@@ -121,6 +137,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Subtract from unsigned number
+	 * 
+	 * @param a value to subtract
+	 */
 	public void sub(UnsignedNumber a)
 	{
 		overflow = false;
@@ -139,6 +160,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Add to unsigned number
+	 * 
+	 * @param a Value to add
+	 */
 	public void add(int a)
 	{
 		overflow = false;
@@ -158,6 +184,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Add to unsigned number
+	 * 
+	 * @param a Value to add
+	 */
 	public void add(UnsignedNumber a)
 	{
 		overflow = false;
@@ -177,6 +208,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Multiply unsigned number
+	 * 
+	 * @param a Value to multiply by
+	 */
 	public void mul(UnsignedNumber a)
 	{
 		overflow = false;
@@ -195,6 +231,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Multiply unsigned number
+	 * 
+	 * @param a Value to multiply by
+	 */
 	public void mul(int a)
 	{
 		overflow = false;
@@ -213,6 +254,11 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Set the value of the unsigned number
+	 * 
+	 * @param val
+	 */
 	public void setVal(int val)
 	{
 		if(val <= maxVal)
@@ -223,26 +269,49 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Get the value of the unsigned number
+	 * 
+	 * @return value
+	 */
 	public int getVal()
 	{
 		return val;
 	}
 	
+	/**
+	 * Check if there has been overflow
+	 * 
+	 * @return
+	 */
 	public boolean overflow()
 	{
 		return tcOverflow;
 	}
 	
+	/**
+	 * Returns the carry bit
+	 * 
+	 * @return Carry bit
+	 */
 	public boolean carry()
 	{
 		return overflow;
 	}
 	
+	/**
+	 * Duplicate you unsigned number
+	 */
 	public UnsignedNumber clone()
 	{
 		return new UnsignedNumber(this.val, this.bytes);
 	}
 	
+	/**
+	 * Set the size of the unsigned number in bytes
+	 * 
+	 * @param bytes
+	 */
 	public void setBytes(int bytes)
 	{
 		this.bytes = bytes;
@@ -252,11 +321,22 @@ public class UnsignedNumber implements Cloneable {
 		constructByteArray();
 	}
 	
+	/**
+	 * Get the amount of bytes
+	 * 
+	 * @return Number of bytes
+	 */
 	public int getBytes()
 	{
 		return bytes;
 	}
 	
+	/**
+	 * Get the byte at the given index
+	 * 
+	 * @param index
+	 * @return Byte
+	 */
 	public int getByte(int index)
 	{
 		return byteArray[index];

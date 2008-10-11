@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STD_FD extends HC11Instruction implements Instruction 
+public class STD_FD extends Instruction implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

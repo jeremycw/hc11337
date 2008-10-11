@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class STAA_B7 extends HC11Instruction implements Instruction 
+public class STAA_B7 extends Instruction implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

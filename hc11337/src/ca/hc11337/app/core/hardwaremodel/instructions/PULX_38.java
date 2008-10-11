@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class PULX_38 implements Instruction 
+public class PULX_38 implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

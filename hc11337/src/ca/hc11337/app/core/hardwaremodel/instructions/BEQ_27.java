@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class BEQ_27 implements Instruction 
+public class BEQ_27 implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

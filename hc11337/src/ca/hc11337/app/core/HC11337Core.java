@@ -31,16 +31,32 @@ public class HC11337Core extends Observable {
 	}
 	
 	//Editor stuff
+	
+	/**
+	 * Creates a new empty editor
+	 * 
+	 */
 	public void newEditor(String name) throws FileNotFoundException
 	{
 		editors.add(new Editor(name));
 	}
 	
+	/**
+	 * Close an editor
+	 * 
+	 * @param index Index of the editor tab
+	 */
 	public void removeEditor(int index)
 	{
 		editors.remove(index);
 	}
 	
+	/**
+	 * Create a new editor and load it with file
+	 * 
+	 * @param file File to be loaded into the editor
+	 * @throws FileNotFoundException
+	 */
 	public void newEditor(File file) throws FileNotFoundException
 	{
 		editors.add(new Editor(file));
@@ -48,11 +64,23 @@ public class HC11337Core extends Observable {
 		notifyObservers(0);
 	}
 	
+	/**
+	 * Get the text of the editor at the given index
+	 * 
+	 * @param index Index of the editor tab
+	 * @return Text from the editor
+	 */
 	public String getText(int index)
 	{
 		return editors.get(index).getText();
 	}
 	
+	/**
+	 * Set the text of the editor at the given index
+	 * 
+	 * @param text
+	 * @param index
+	 */
 	public void setText(String text, int index)
 	{
 		int sizeDif = getText(index).length() - text.length();
@@ -72,6 +100,12 @@ public class HC11337Core extends Observable {
 		return editors.get(index).checkTokenAt(offset);
 	}
 	
+	/**
+	 * Get the file that is open in an editor
+	 * 
+	 * @param index The index of the tab that contains the editor
+	 * @return The file that is open in that editor
+	 */
 	public File getEditorFile(int index)
 	{
 		return editors.get(index).getFile();
@@ -83,11 +117,22 @@ public class HC11337Core extends Observable {
 		return api.getRegisterNames();
 	}
 	
+	/**
+	 * Get all register values
+	 * 
+	 * @return Dump of all register values
+	 */
 	public int[] getRegisterValues()
 	{
 		return api.getRegisterValues();
 	}
 	
+	/**
+	 * Set the value of a CPU register
+	 * 
+	 * @param index use one of the constants defined in Reg to specify which register to set
+	 * @param value The value the register will change to
+	 */
 	public void setRegisterValue(int index, int value)
 	{
 		api.setRegister(index, value);
@@ -95,6 +140,12 @@ public class HC11337Core extends Observable {
 		notifyObservers(3);
 	}
 	
+	/**
+	 * Load an S19 file into memory
+	 * 
+	 * @param file .s19 file
+	 * @throws FileNotFoundException
+	 */
 	public void loadS19(File file) throws FileNotFoundException
 	{
 		S19Processor processor = new S19Processor(file);
@@ -118,6 +169,11 @@ public class HC11337Core extends Observable {
 		return api.getChangedMemoryValues();
 	}
 	
+	/**
+	 * Get all values from memory
+	 * 
+	 * @return Dump of memory
+	 */
 	public int[] getMemDump()
 	{
 		int[] memDump = new int[65536];
@@ -126,6 +182,9 @@ public class HC11337Core extends Observable {
 		return memDump;
 	}
 	
+	/**
+	 * Executes the next instruction
+	 */
 	public void execute()
 	{
 		api.execute();
@@ -133,6 +192,12 @@ public class HC11337Core extends Observable {
 		notifyObservers(3);
 	}
 	
+	/**
+	 * Get a value from memory
+	 * 
+	 * @param index
+	 * @return Value in memory at index
+	 */
 	public int getMemoryAt(int index)
 	{
 		return api.getMemoryAt(index);

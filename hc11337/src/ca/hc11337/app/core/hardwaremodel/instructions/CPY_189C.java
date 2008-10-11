@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class CPY_189C extends HC11Instruction implements Instruction 
+public class CPY_189C extends Instruction implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

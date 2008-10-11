@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class PSHY_183C implements Instruction 
+public class PSHY_183C implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

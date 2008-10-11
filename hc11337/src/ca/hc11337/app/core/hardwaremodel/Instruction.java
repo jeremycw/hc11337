@@ -1,23 +1,100 @@
-/*This file is part of HC11337.
-
-    HC11337 is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    HC11337 is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with HC11337.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package ca.hc11337.app.core.hardwaremodel;
 
-public interface Instruction
-{
-	public void exec();
-
+public class Instruction {
+	protected CPU cpu;
+	protected Memory mem;
+	
+	public Instruction(CPU cpu, Memory mem)
+	{
+		this.cpu = cpu;
+		this.mem = mem;
+	}
+	
+	private UnsignedNumber decodeOperator(int bytes)
+	{
+		UnsignedNumber pc = cpu.getReg(Reg.PC);
+		pc.inc();
+		UnsignedNumber[] byteArray = new UnsignedNumber[bytes];
+		for(int i = 0; i < bytes; i++)
+		{
+			byteArray[i] = mem.read(pc);
+			pc.inc();
+		}
+		return new UnsignedNumber(byteArray);
+	}
+	
+	protected UnsignedNumber direct()
+	{
+		return decodeOperator(1);
+	}
+	
+	protected UnsignedNumber immediate(int bytes)
+	{
+		return decodeOperator(bytes);
+	}
+	
+	protected UnsignedNumber extended()
+	{
+		return decodeOperator(2);
+	}
+	
+	protected UnsignedNumber indirectX()
+	{
+		UnsignedNumber addr = decodeOperator(1);
+		addr.setBytes(2);
+		addr.add(cpu.getReg(Reg.X));
+		return addr;
+	}
+	
+	protected UnsignedNumber indirectY()
+	{
+		UnsignedNumber addr = decodeOperator(1);
+		addr.setBytes(2);
+		addr.add(cpu.getReg(Reg.Y));
+		return addr;
+	}
+	
+	protected void calcConditionCodes(UnsignedNumber val, int... codes)
+	{
+		for(int i = 0; i < codes.length; i++)
+		{
+			switch(codes[i])
+			{
+			case CCR.S:
+				break;
+			case CCR.X:
+				break;
+			case CCR.H:
+				break;
+			case CCR.I:
+				break;
+			case CCR.N:
+				if(val.getVal() > Math.pow(2.0, val.getBytes()*8)/2 - 1)
+					cpu.setCC(CCR.N, true);
+				else
+					cpu.setCC(CCR.N, false);
+				break;
+			case CCR.Z:
+				if(val.getVal() == 0)
+					cpu.setCC(CCR.Z, true);
+				else
+					cpu.setCC(CCR.Z, false);
+				break;
+			case CCR.V:
+				if(val.overflow())
+					cpu.setCC(CCR.V, true);
+				else
+					cpu.setCC(CCR.V, false);
+				break;
+			case CCR.C:
+				if(val.carry())
+					cpu.setCC(CCR.C, true);
+				else
+					cpu.setCC(CCR.C, false);
+				break;
+			default:
+				System.out.println("Fuck!");
+			}
+		}
+	}
 }

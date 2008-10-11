@@ -38,6 +38,11 @@ public class S19Processor {
 		nextLine = scanner.nextLine();
 	}
 	
+	/**
+	 * Reads the next address in the S19 file
+	 * 
+	 * @return Memory address
+	 */
 	public int nextAddress()
 	{
 		if(addressRead){
@@ -52,6 +57,11 @@ public class S19Processor {
 		return Integer.parseInt(currentLine.substring(4, 8), 16);
 	}
 	
+	/**
+	 * Reads the next byte in the S19 file
+	 * 
+	 * @return Byte
+	 */
 	public int nextByte()
 	{
 		if(byteCount == 0)
@@ -69,6 +79,11 @@ public class S19Processor {
 		return num;
 	}
 	
+	/**
+	 * Reads the next line byte count
+	 * 
+	 * @return Line byte count
+	 */
 	public int nextByteCount()
 	{
 		if(byteCountRead){
@@ -83,6 +98,11 @@ public class S19Processor {
 		return Integer.parseInt(currentLine.substring(2, 4), 16)-3;
 	}
 	
+	/**
+	 * Checks if there is another line that needs to be read
+	 * 
+	 * @return
+	 */
 	public boolean hasNextLine()
 	{
 		return nextLine.charAt(1) == '9'? false : true;

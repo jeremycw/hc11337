@@ -18,7 +18,7 @@ package ca.hc11337.app.core.hardwaremodel.instructions;
 
 import ca.hc11337.app.core.hardwaremodel.*;
 
-public class PSHX_3C implements Instruction 
+public class PSHX_3C implements Executable 
 {
 	private CPU cpu;
 	private Memory mem;

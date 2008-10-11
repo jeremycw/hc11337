@@ -27,7 +27,7 @@ public class CPU
 	private Memory mem;
 	private boolean ccr[] = new boolean[8];
 	private Vector<UnsignedNumber> registers = new Vector<UnsignedNumber>();
-	private Hashtable<Integer, Instruction> instructionSet = new Hashtable<Integer, Instruction>();
+	private Hashtable<Integer, Executable> instructionSet = new Hashtable<Integer, Executable>();
 	
 	public CPU(Memory m)
 	{
@@ -118,7 +118,7 @@ public class CPU
 	{
 		UnsignedNumber pc = registers.get(Reg.PC);
 		UnsignedNumber opcode = mem.read(pc).clone();
-		Instruction currentInstruction;
+		Executable currentInstruction;
 		switch(opcode.getVal())
 		{
 		case 0x18:
