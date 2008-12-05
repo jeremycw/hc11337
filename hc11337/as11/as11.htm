@@ -1,0 +1,1204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>The as11 assembler</TITLE>
+</HEAD>
+<BODY text=#000000 vLink=#551a8b aLink=#ff0000 link=#0000ff bgColor=#ffffff>
+<H1>The as11 assembler</H1>
+<h3>This is a new implementation of as11 that uses the as12 codebase. This now has the same general commands as as12.</h3>
+
+<UL>
+  <LI><A href="#introduction">Introduction</A></LI>
+  <LI><A href="#invoke">Invoking the as11 assembler</A></LI> 
+  <LI><A href="#commandline">Command-line options</A></LI>
+  <LI><A href="#Files">Files</A></LI> 
+  <LI><A href="#as11 constructs">as11 constructs</A></LI>
+</UL>
+
+<P>Version 1.2e &nbsp; June 19, 2005 by Matthew Kincaid, Eric Engler, Tom Almy &nbsp; <A href="http://www.ericengler.com/AsmIDE.aspx"> http://www.ericengler.com/AsmIDE.aspx</A> </P>
+
+<font size=+2>The current version of as11 is available here: <a href="http://www.ericengler.com/AsmIDE.aspx">http://www.ericengler.com/AsmIDE.aspx</a></font>
+<P></P>
+<HR>
+
+<A name="as11 constructs">
+<P></P>
+<H3>
+      as11 constructs
+    </H3></A>
+<P>
+<UL>
+  <LI><A href="#commandline">commandline Options</A></LI>
+  <LI><A href="#directives">Directives</A></LI>
+  <LI><A href="#pound operators">Pound Sign (#) Operators</A></LI>
+  <LI><A href="#comments">Comments</A></LI> 
+  <LI><A href="#expressions">Expressions</A></LI>
+  <LI><A href="#mnemonics">Mnemonics</A></LI> 
+</UL>
+<P></P>
+<HR>
+
+<A name=invoke>
+<H3>Invoking the as11 assembler</H3></A>
+
+<P>
+      To start the as11 assembler, enter the following command at the prompt:
+    </P><PRE>as11 foo.asm</PRE>
+
+<P>
+      Where as11 is the name of the assembler you want to use, and foo.asm is the path, name, and extension of the file you want to 
+assemble.
+      
+      <br>
+      The as11 assembler will assemble the file, sending the listing output to the console and writing the S19 object output to a file named file.ext.
+      
+     <br>
+      <br>
+      To save the listing output in a text file for later review, use the -L option. For example:
+    </P><PRE>as11 foo.asm -Lfoo.lst</PRE>
+<P>
+      will assemble the file foo.asm and write the output listing to a file named foo.lst.
+      
+      <br>
+      Entering <STRONG>as11</STRONG> with no arguments will display a short help 
+file describing the available commandline options.
+</P><P></P>
+<HR>
+
+<A name=commandline>
+<H3>Commandline Options</H3></A>
+<P>Commandline options allow you to specify input file names, define global 
+symbols, and declare paths for library files. For example:</P><PRE>as11 foo.asm -dTIMERS -l\mylib\hc12 -Lfoo.lst</PRE>
+<P>will assemble the file foo.asm, using the library files found in the 
+directory \mylib\hc12. Additionally, the label TIMERS will be defined with a 
+value of 1 and the listing output will be written to file foo.lst.</P>
+<P>When specifying the assembler source file, the extension ".asm" is assumed if 
+no extension is explicitly given.</P>
+<P>
+      The full set of commandline options includes: 
+    </P>
+<table border="0">
+  <tbody>
+    <tr>
+      <td align="left">-o&lt;filename&gt;   </td>
+      <td>Define object file (default extension is .s19)</td>
+    </tr>
+    <tr>
+      <td align="left">-d&lt;symbol&gt;</td>
+      <td>Define the symbol 'name' with a value of 1</td>
+    </tr>
+    <tr>
+      <td align="left">-l&lt;dir&gt;</td>
+      <td>Define a library directory with path 'lib'</td>
+    </tr>
+    <tr>
+      <td align="left">-L&lt;filename&gt;</td>
+      <td>Define listing file (default extension is .lst)</td>
+    </tr>
+    <tr>
+      <td align="left">-D</td>
+      <td>Turn on debugging printout</td>
+    </tr>
+    <tr>
+      <td align="left">-s&lt;filename&gt;</td>
+      <td>Create a symbol table file (use dflt: filename.sym)</td>
+    </tr>
+    <tr>
+      <td align="left">-p&lt;part #&gt;</td>
+      <td>Define MCU part number, such as 68hc12a4 (see #ifp)</td>
+    </tr>
+    <tr>
+      <td align="left">--list</td>
+      <td>Display list file to console</td>
+    </tr>
+    <tr>
+      <td align="left">--cycles</td>
+      <td>Display the cycle count</td>
+    </tr>
+    <tr>
+      <td align="left">--line-numbers</td>
+      <td>Display line numbers in list file</td>
+    </tr>
+    <tr>
+      <td align="left">--no-warns</td>
+      <td>Suppress warnings being displayed to console and list file</td>
+   </tr>
+  </tbody>
+</table>
+<P></P>
+<HR>
+
+<A name=-d>
+<H3>-d Define a label</H3></A>
+<P>
+      The -d option allows you to define a label on the commandline. Labels defined in this manner are treated by the as11 assembler as if they had been defined within your source file and assigned a value of 1.
+Your source file can then refer to these labels in
+<A href="#pound operators">#ifdef</A> 
+tests. For example:</P>
+<Pre>as11 foo.asm -dMY_ALGORITHM</Pre>
+<P>causes the as11 assembler to behave as if your source file began with the 
+line:</P>
+<P>#define MY_ALGORITHM</P>
+<P>This ability to define labels from the commandline adds great power to the 
+as11 assembler. You can use this feature to selectively assemble blocks of 
+source code based on arguments you specify in the commandline, without first 
+having to edit the source code before each assembly.
+<P></P>
+<HR>
+
+<A name=-l>
+<H3>-l Define a library path</H3></A>
+<P>Normally, as11 first checks in the current directory for needed include files.
+If as11 cannot find a needed file in the current directory, it will try the library
+path specified with the -l option on the commandline, if any.</P>
+<P>For example:</P>
+<PRE>as11 foo.asm -lc:\mypath</PRE>
+<P></P>
+<HR>
+
+<A name=-p>
+<H3>-p Define the target processor</H3></A>
+<P>as11 allows you to pass in a specific processor or board to identify the part you 
+are compiling the program for. When combined with the <A href="#ifpart">#ifpart</A> 
+conditional assembly directive, can give users a powerful way to compile source 
+code which may depend upon what part is being targeted.</P>
+<P>For example:</P>
+<PRE>as11 foo.asm -pDragon12</PRE>
+<P></P>
+<HR>
+
+<A name=-D>
+<H3>-D Debug the as11 assembler</H3></A>
+<P>Turns on the internal debug features of as11. Mostly for the developer of 
+as11, but might be helpful if you are having a problem understanding what as11 is doing.</P>
+<P>For example:</P>
+<PRE>as11 foo.asm -D</PRE>
+<P></P>
+<HR>
+
+<A name=-L>
+<H3>-L Listing file</H3></A>
+<P>Specifies a listing file. If no filename extension is given, ".lst" is 
+assumed. If no file name is given, then the file name will be that of the first 
+source file, with an extension ".lst".</P>
+<P>For example:</P>
+<PRE>as11 foo.asm -L</PRE>
+<P></P>
+<HR>
+
+<A name="pound operators">
+<H1>Pound Sign (#) Operators</H1></A>
+<P>
+<UL>
+  <LI><A href="#include">#include</A></LI>
+  <LI><A href="#define">#define</A></LI>
+  <LI><A href="#ifeq">#ifeq</A></LI>
+  <LI><A href="#ifndef">#ifndef</A></LI> 
+  <LI><A href="#ifdef">#ifdef</A></LI>
+  <LI><A href="#ifpart">#ifpart</A></LI>
+  <LI><A href="#else">#else</A></LI>
+  <LI><A href="#endif">#endif</A></LI>
+  <LI><A href="#typical conditional assembly">Typical Conditional Assembly Examples</A></LI>
+</UL>
+<P></P>
+<HR>
+
+<A name=include>
+<H3>#include</H3></A>
+<P>The include directive allows other assembly source files to be inserted in 
+the code immediately after the include statement, <strong>as if</strong> the contents 
+of the included file were actually in the file that contained the include 
+statement. Stated differently, the include statement works as you might expect. 
+The syntax of the include statement is shown below...</P><PRE>#include \my_dir\myfile.asm</PRE>
+<P>
+      In linux, it is important to note that the filename expansion will only be as good as the filename expansion as the shell that 
+you are operating in. For example, if you are running shell (/bin/sh) then the tilde username (~user) lookup may not work correctly.
+ It is best to put in relative or absolute filepath specifications that are not shell dependent.
+    </P>
+<P>Include statements may be used within <A 
+href="#define">#ifdef</A> 
+statements.
+<P>New in version 1.2c: we can now support quoted filenames within #include. This lets us use 
+filenames that might have embedded spaces, or the directory name may have 
+embedded spaces:</P>
+<pre>#include "c:\program files\as11\my defs.h"</pre>
+<P></P>
+<hr>
+
+<A name=define>
+<P></P>
+<H3>#define</H3></A>
+<P>The define statement allows labels to be defined. This statement is simply an 
+alternate form for an <A href="#equ">equ</A> assembler directive. The alternate form
+is provided so that users will be alerted to the opportunities to write more sophisticated
+code that the <A href="#ifeq">#ifeq</A>, and related statements allow. The proper use of the
+define statement is:</P>
+<strong>#define MY_LABEL expression</strong>
+
+<P>The define statement is as if the user had typed the following:</P>
+<strong>MY_LABEL: EQU expression</strong>
+
+<P>Both forms are equally valid, and both forms are implemented internally thee 
+same way. The EQU is probably more portable of the two constructs.</P>
+<P></P>
+<HR>
+
+<A name=ifeq>
+<P></P>
+<H3>#ifeq</H3></A>
+<P>The ifeq command allows for the user to conditionally compile different 
+sections of assembly language based on whether or not a label is equal to a 
+value. Example:</P>
+<PRE>#ifeq MY_SYMBOL expression_to_compare_to
+  ... 
+  (this code will be assembled if MY_SYMBOL has the same value as expression_to_compare_to)
+  ...
+#endif
+</PRE>
+<P>I show the <A href="#endif">#endif</A> 
+statement because for every form of <strong>#if</strong> there needs to be a marker so 
+that as11 knows what code is to be conditionally compiled. Restated, for every 
+if there needs to be an endif.</P>
+<P>If the expression resolves to the same value as the label in an #ifeq 
+directive, then every line between the #ifeq and the #endif is executed. If the 
+expression resolves to a different value than the label, all of the lines 
+between the #ifeq and the #endif are ignored.</P>
+<P></P>
+<HR>
+
+<A name=ifndef>
+<P></P>
+<H3>#ifndef</H3></A>
+<P>The ifndef command allows for the user to conditionally compile different 
+sections of assembly language based on whether or not a label is defined.
+Example:</P>
+<PRE>#ifndef MY_LABEL
+  ... 
+  (this code will be assembled if MY_LABEL has not been defined)
+  ...
+#endif
+</PRE>
+<P>I show the <A href="#endif">#endif</A> 
+statement because for every form of <strong>#if</strong> there needs to be a marker so 
+that as11 knows what code is to be conditionally compiled. Restated, for every 
+if there needs to be an endif.</P>
+<P></P>
+<HR>
+
+<A name=ifdef>
+<P></P>
+<H3>#ifdef</H3></A>
+<P>The ifdef command allows for the user to conditionally compile different 
+sections of assembly language based on whether or not a label is defined (via a 
+<A href="#define">#define</A> 
+or an EQU. 
+Example...</P>
+<PRE>#ifdef MY_LABEL 
+  ...
+  (this code will be assembled if MY_LABEL has been defined)
+  ...
+#endif
+</PRE>
+<P>I show the <A href="#endif">#endif</A> 
+statement because for every form of <strong>#if</strong> there needs to be a marker so 
+that as11 knows what code is to be conditionally compiled. Restated, for every 
+if there needs to be an endif.</P>
+<P>If the label in an #ifdef directive is defined, then every line between the 
+#ifeq and the #endif is executed. If the label is not defined, all of the lines 
+between the #ifdef and the #endif are ignored.</P>
+<P></P>
+<HR>
+
+<A name=ifpart>
+<P></P>
+<H3>#ifpart</H3></A>
+<P>This is the only directive that allows for a string comparison. A special 
+internal variable is the only variable which is a string variable. The only way 
+to set that variable is with the <A href="#-p">-p</A> 
+commandline option. The sole purpose of this directive is to allow for 
+conditional assembly based upon the value of the string. This seemed natural 
+for handling the different part types. Example..</P>
+<PRE>#ifpart b32
+  ... 
+  (this code will be assembled if the string &lt;b32&gt; is same as string in <A href="#-p">-p</A> commandline option
+  ...
+#endif
+</PRE>
+<P>I show the <A href="#endif">#endif</A> 
+statement because for every form of <strong>#if</strong> there needs to be a marker so 
+that as11 knows what code is to be conditionally compiled. Restated, for every 
+if there needs to be an endif.</P>
+<P>If the string that follows the #ifpart directive matches the string that was 
+passed in via the <A href="#-p">-p</A> 
+option, then the lines betwee n the #ifpart and the #endif will be executed. If 
+the strings do not match, the lines between the #ifpart and the #endif will be 
+ignored.</P>
+<P></P>
+<HR>
+
+<A name=else>
+<P></P>
+<H3>#else</H3></A>
+<P>This directive must be coupled with any of the if directives. This allows 
+either or compilation and performs just like you expect an else to perform. 
+Example..</P>
+<PRE>#ifdef MY_LABEL
+  ... 
+  (this code will be assembled if MY_LABEL is defined)
+  ...
+#else
+  ... 
+  (this code will be assembled if MY_LABEL is NOT defined)
+  ...
+#endif
+</PRE>
+<P>I show the <A href="#endif">#endif</A> 
+statement because for every form of <strong>#if</strong> there needs to be a marker so 
+that as11 knows what code is to be conditionally compiled. Restated, for every 
+<strong>#if</strong> there needs to be an <strong>#endif</strong>.</P>
+
+<P>If the <strong>#if</strong> statement that goes with the <strong>#else</strong> statement is true, the statements 
+between the <strong>#if</strong> and the <strong>#else</strong> will be assembled, and the statements between the 
+<strong>#else</strong> and the <strong>#endif</strong> will be ignored. If the <strong>#if</strong> statement is false, the statements 
+between the <strong>#if</strong> and the <strong>#else</strong> will be ignored and the statements between the <strong>#else</strong>
+and the <strong>#endif</strong> will be executed</P>
+<P>There can only be one <strong>#else</strong> for each <strong>#if</strong> statement.
+But <strong>#else</strong> is optional, so you do not have to use it.</P>
+<P></P>
+<HR>
+
+<A name=endif>
+<P></P>
+<H3>#endif</H3></A>
+<P>The <strong>#endif</strong> statement tells the assembler when the conditional assembly section 
+of the code is finished. Otherwise the assembler would have no way of knowing 
+when to quit.</P>
+<P>For every <strong>#if</strong> statement there needs to be one <strong>#endif</strong>. If there is an <strong>#if</strong> and an 
+<strong>#else</strong>, then there should be one <strong>#endif</strong> statement also.</P>
+<P>Examples:</P>
+<PRE>#ifpart part_name
+  ...
+#else
+  ...
+#endif
+
+#ifndef MY_LABEL>
+  ...
+#endif
+
+#ifndef MY_LABEL
+  ...
+#else
+  ...
+#endif
+</PRE>
+<P></P>
+<HR>
+
+<A name="typical conditional assembly">
+<H1>Typical Conditional Assembly Examples</H1></A>
+<P>
+<UL>
+  <LI>Use to handle parts starting in different modes. You can automate this and 
+  keep from modifying your source code my defining the label by invoking the 
+  assembler using the <A href="#-d">-d</A> commandline option.<br>
+<PRE>#ifdef EXPANDED_MODE
+  org START_OF_EXTERNAL_RAM_TESTS
+#else
+  org START_OF_FLASH_RAM
+#endif</PRE></LI>
+  <LI>Use to handle configuring software so that your code will 
+    operate regardless of what part might be used. You can keep from changing your 
+    source code by passing in the parttype using the <A href="#-p">-p</A> 
+    commandline option.<br>
+<PRE>#ifpart b32
+RAM_START:  EQU  $800
+FEE_START:  EQU  $8000
+REG_START:  EQU  $0000
+PWM_START:  EQU  $c7
+#endif
+
+#ifpart a4
+RAM_START:  EQU  $600
+REG_START:  EQU  $0100
+#endif
+</PRE></LI>
+</UL>
+
+<P>Notice how easy you could build a library of different parts and make your 
+source code compile accordingly.</P>
+<P></P>
+<HR>
+
+<A name=Files>
+<H1>Files</H1></A>
+<P></P>
+<UL>
+  <LI><A href="#as11exe">Assembler executables, &nbsp;&nbsp;as11</A></LI>
+  <LI><A href="#m.out">Motorola machine code, *.s19</A></LI> 
+  <LI><A href="#the source">Source &nbsp;files, *.asm</A></LI>
+  <LI><A href="#the listing">Listing files, *.lst</A></LI>
+</UL>
+<P></P>
+<HR>
+
+<A name=as11exe>
+<H3>
+      Assembler executable, as11
+      
+      <br>
+      
+    </H3></A>
+<P>
+      Filename: as11.exe.
+      
+      <p></p>
+      NOTE: On linux the .exe extension is not typically used.
+      
+      <p></p>
+      These are the cross assemblers that &nbsp;allow you to convert your Motorola source code to Motorola machine code on your PC.
+    </P><HR>
+
+<A name=m.out>
+<P></P>
+<H3>
+      Motorola machine code, *.s19
+    </H3></A>
+<P>A file with the same name as the first source file but with the extension 
+".s19" is used to hold the binary machine code instructions. This is produced
+by the assembler: the assembler translates text commands into binary commands.
+The binary data is stored in the s-record format, which is contained in the .s19 file. 
+</P>
+<P>This is the file that is sent to the embedded board, where your program
+will be executed.</P>
+<P>
+      For additional &nbsp;information regarding s-records visit <A href="http://www.seattlerobotics.org/encoder/jun99/dougl.html">
+Seattle Encoder&#039;s s-record article</A>
+<P></P>
+<HR>
+
+<A name="the listing">
+<P></P>
+<H3>
+      Listing files, *.lst
+    </H3></A>
+<P>The listing file is useful for debugging. Simply add the commandline option 
+"-L" to create the listing file.</P>
+<P></P>
+<HR>
+
+<A name="the source">
+<H3>
+      Source files, &nbsp;*.asm
+    </H3></A>
+<P>
+      Standard ASCII source files. These should be created with the extension &quot;.asm&quot; since that is the default used by the
+ assembler, but is not required.
+    </P>
+<P></P>
+<HR>
+
+<A name=features></A>
+<H1>Features</H1>
+<P></P>
+<HR>
+<P></P>
+<A name=expressions>
+<H3>Expressions</H3></A>
+<P>Expressions may consist of <A href="#Symbols">symbols</A>, 
+<A href="#constants">constants</A> 
+or the character '*' (denoting the current value of the 
+program counter) joined together by one of the operators: +-*/%&amp;|^. You may nest 
+expressions using parentheses up to 10 levels deep. The operators are the same as 
+in C:</P>
+<PRE>+       add
+-       subtract
+*       multiply
+/       divide
+%       remainder after division
+&amp;       bitwise and
+|       bitwise or
+^       bitwise exclusive-or</PRE>
+<P>In addition, the unary minus (-) and complement (~) operators are allowed 
+when preceding a symbol, constant, or character '*' only.</P>
+Examples of valid expressions...<p></p>
+<pre>
+  (5*8)
+  (my_val-10+20*(16-label)/10)
+  10
+  $10
+  *
+  %10010
+  my_value
+  ~$20
+</pre>
+<p></p>
+
+<p>Starting with version 1.2e you can <strong>NOT</strong> have spaces in an expression:</p>
+<pre>  ldaa foo + 1</pre>
+      <br>will produce erronous assembly. The correct way to write this expression is:
+      <br> <pre>  ldaa foo+1</pre>
+     <br>
+<P>Note: When the asterisk (*) is used in a context where the as11 is expecting 
+a label, the asterisk (*) represents the value of the current program counter.</P>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=Symbols></A>Symbols</H3>
+<P>Symbols consist of one or more characters where the first character is 
+alphabetic and any remaining characters are alphanumeric. Symbols <strong>ARE</strong> case 
+sensitive.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=constants>
+<H3>Constants</H3></A>
+<PRE>'       followed by ASCII character
+!       followed by a decimal constant (decimal is assumed, so ! is optional)
+$       followed by hexadecimal constant
+@       followed by octal constant
+%       followed by binary constant
+digit   decimal constant
+</PRE>
+<P>Examples:</P>
+<PRE>'A
+46
+$2E
+@07
+%10001001
+</PRE>
+<P></P>
+<HR>
+
+<P></P>
+<A name=labels>
+<H3>Labels</H3></A>
+<P>A symbol starting in the first column is a label and may optionally be ended 
+with a ':'. A label may appear on a line by itself and is then interpreted 
+as:</P><PRE>        Label   EQU     *</PRE>
+<P>
+      Note that labels are <strong>NOT</strong> case sensitive. &nbsp;You can use labels named LABEL interchangebly with LaBeL.
+    </P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=comments>
+<H3>Comments</H3></A>
+<P>Here are some notes about comments...</P>
+<UL>
+  <LI>Any line beginning with an <b>*</b> in column 1 is a comment line</LI>
+  <LI>Any text beginning with a <b>;</b> is a comment - does not have to begin in column 1</LI>
+</UL>
+<P></P>
+<HR>
+<A name=directives>as11 Directives (or pseudo-opcodes)</A> 
+<P></P>
+<UL>
+  <LI><A href="#bsz">bsz</A></LI> 
+  <LI><A href="#db">db</A></LI> 
+  <LI><A href="#dc.b">dc.b</A></LI> 
+  <LI><A href="#dc.w">dc.w</A></LI> 
+  <LI><A href="#ds">ds</A></LI> 
+  <LI><A href="#ds.b">ds.b</A></LI> 
+  <LI><A href="#ds.w">ds.w</A></LI> 
+  <LI><A href="#dw">dw</A></LI> 
+  <LI><A href="#equ">equ</A></LI> 
+  <LI><A href="#fcb">fcb</A></LI> 
+  <LI><A href="#fcc">fcc</A></LI> 
+  <LI><A href="#fdb">fdb</A></LI> 
+  <LI><A href="#fill">fill</A></LI> 
+  <LI><A href="#loc">loc</A></LI> 
+  <LI><A href="#opt">opt</A></LI> 
+  <LI><A href="#org">org</A></LI> 
+  <LI><A href="#redef">redef</A></LI> 
+  <LI><A href="#rmb">rmb</A></LI> 
+  <LI><A href="#rmw">rmw</A></LI> 
+  <LI><A href="#zmb">zmb</A></LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=bsz>
+<H3>bsz Pseudo Opcode - Block Set Zeros</H3></A>
+<P>Sets a block of memory to zero values. Same as zmb.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=db>
+<H3>db Pseudo Opcode - Define Byte</H3></A>
+<P>Syntax and examples:</P>
+<PRE>
+	db	Byte_Definition[,Byte_Definition]
+	db	$55,$66,%11000011
+	db	10
+half	db	0.5*100
+</PRE>
+<P>db Defines the value of a byte or bytes that will be placed at a given 
+address.</P>
+<P>The db directive assigns the value of the expression to the current program 
+counter. Then the program counter is incremented.</P>
+<P>Multiple bytes can be defined at a time by comma separating the arguments. 
+Each comma separated argument can be a separate expression that the as 12 will 
+evaluate.</P>
+<P>Notes:</P>
+<UL>
+  <LI>This is probably a more universally accepted pseudo-op than the fcb. 
+  However, the selection of a pseudo op does have implications on portability. I 
+  provide as many as I can to enhance OUR ability to read other peoples code. </LI>
+  <LI>This should be used for memory that is not considered volatile 
+  (ROM/EE/FLASH) or memory that will be boot-loaded or similar. For defining RAM 
+  memory for variables and scratchpad memory the ds directive is more 
+  appropriate. </LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>fcb</LI> 
+  <LI>fdb</LI> 
+  <LI>dw</LI>
+  <LI>ds</LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>Defining Data Tables/Structures</LI>
+  <LI>Defining ASCII phrases (strings)</LI>
+  <LI>Defining Constants </LI>
+</UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Be careful not to define values that are <strong>larger</strong> than 8 bits. as11 
+  truncates the left most bits to make the byte fit into a byte.</LI>
+  <LI>A label is usually used so there is a reference to this memory. In the 
+  last example in the Syntax section, it can be seen that the label 
+  <strong>half</strong> will refer to the byte with a decimal value of 50. (Not really 
+  fixed point math but I'm only demonstrating the use of a label) </LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=dc.b>
+<H3>dc.b Pseudo Opcode - Define Constant Byte - declare a byte of memory</H3></A>
+<P>Identical to db</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=dc.w>
+<H3>dc.w Pseudo Opcode - Define Constant Word - declare a word of memory</H3></A>
+<P>Identical to dw.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=ds>
+<P></P>
+<H3>ds Pseudo Opcode - Define Storage</H3></A>
+<P>Syntax and examples:</P>
+<PRE>	ds	Number_of_Bytes_To_Advance_Program_Counter
+</PRE>
+<P>The ds increments the program counter by the value indicated in the Number of 
+Bytes argument.</P>
+<P>Notes:</P>
+<UL>
+  <LI>This is the preferred method of defining a memory location whose value...</LI>
+  <UL>
+    <LI>is changing </LI>
+    <LI>is generally not known </LI>
+  </UL>
+  <LI>In other words, this is optimal for defining RAM or REGISTER spaces. The 
+  reason for this is the ease in which a ds based region can be relocated.</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>rmb </LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>RAM definitions</LI>
+  <LI>REGISTER definitions</LI>
+</UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Inappropriate for non-volatile memory definitions </LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=ds.b>
+<H3>ds.b Pseudo Opcode - Define Storage Bytes - declare bytes of storage</H3></A>
+<P>Identical to ds.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=ds.w>
+<H3>ds.w Pseudo Opcode - Define Storage Word</H3></A>
+<P>Syntax and examples:</P>
+<PRE>	ds.w	Number_of_Words_To_Advance_Program_Counter
+</PRE>
+<P>The ds.w increments the program counter by the value indicated in the argument 
+multiplied by two. In other words, if the ds.w expression evaluates to 4 then the 
+program counter is advanced by 8.</P>
+<P>Notes:</P>
+<UL>
+  <LI>Good for defining RAM and REGISTERS </LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>ds </LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>labels </LI>
+</UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Inappropriate for non-volatile memory.</LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=dw>
+<H3>dw Pseudo Opcode - Define Word</H3></A>
+<P>Syntax and examples:</P>
+<PRE>
+	dw	Word_Definition[,Word_Definition]
+	dw	$55aa,$66,%11000011
+	dw	10
+half	dw	0.5*65536
+</PRE>
+<P>Defines the value of a word or words that will be placed at a given 
+address.</P>
+<P>The dw directive assigns the value of the expression to the current program 
+counter. Then the program counter is incremented by 2.</P>
+<P>Multiple words can be defined at a time by comma separating the arguments. 
+Each comma separated argument can be a separate expression that the as 12 will 
+evaluate. </P>
+<P>Notes:</P>
+<UL>
+  <LI>This is probably a more universally accepted pseudo-op than the fdb. 
+  However, the selection of a pseudo op does have implications on portability. I 
+  provide as many as I can to enhance OUR ability to read other peoples code.</LI> 
+  <LI>This should be used for memory that is not considered volatile 
+  (ROM/EE/FLASH) or memory that will be boot-loaded or similar. For defining RAM 
+  memory for variables and scratchpad memory the ds directive is more 
+  appropriate.</LI> 
+  <LI>Words are right justified and left filled with zero's.</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>fdb</LI>
+  <LI>dc.w</LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>Defining Data Tables/Structures 
+  <LI>Defining Constants </LI></UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Be careful not to define values that are <strong>larger</strong> than 16 bits. 
+  as11 truncates the left most bits to make the word fit into a word. </LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=equ>
+<H3>equ Pseudo Opcode - Equate</H3></A>
+<P>Syntax and examples:</P>
+<PRE>Label	EQU	Value_To_Assign_To_The_Label
+</PRE>
+<P>Directly assigns a numeric value to a label.</P>
+<P>Notes:</P>
+<UL>
+  <LI>assigns a meaningful name to constants</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>#define</LI>
+  <LI>-d commandline option</LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>#ifeq and related options </LI></UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Be careful of how many bits your label can take. The as11 internally uses 
+  anywhere from 32 bits for the label value with the Win32 version. It is very 
+  easy to get bigger than 8 or 16 bits.</LI>
+  <LI>Inappropriate for defining memory locations. I would recommend only using 
+  for defining constants. Otherwise relocation can be made very difficult.</LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=fcb>
+<H3>fcb Pseudo Opcode - Form Constant Byte - declare bytes of storage</H3></A>
+<P>Identical to db.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=fcc>
+<H3>fcc Pseudo Opcode - Form Constant Characters</H3></A>
+<P>Syntax and examples :</P>
+<PRE>
+	fcc	delim_character<strong>string_to_encode</strong>delim_character
+	fcc	/my_string/
+	fcc	*// string with slashes //*
+	fcc	'best to use single quotes'
+</PRE>
+<P>FCC allows the encoding of a string.</P>
+<P>The first character is the delimiter. By allowing the flexibility of 
+selecting delimiters, you can easily make strings which have slashes and tick 
+marks in them. The <strong>only</strong> catch is that if you choose a delimiter, it 
+</P>
+<UL>
+  <LI>must also be used to mark the end of the string 
+  <LI>it cannot appear in the string as a character. </LI>
+</UL>
+<P>In the second example, my_string will be encoded as an ASCII string. The /'s 
+simply mark the ending and beginning of the string. This also lets you put 
+spaces in the string.</P>
+<P>In the third example, the * (asterisk) is the delimiter and the slashes will 
+be encoded with their ASCII values into the ASCII string.</P>
+<P>Notes:</P>
+<UL>
+  <LI>You cannot have the space as a delimiter</LI>
+  <LI>you can also define strings using FCB except that you have to 
+encode them one character at a time and comma delimit them.</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>fcb </LI></UL>
+<P>Useful With:</P>
+<UL>
+  <LI>Defining strings for displays and such. </LI></UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=fdb>
+<H3>fdb Pseudo Opcode - Form Double Byte - declare words of storage</H3></A>
+<P>Identical to dw.</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=fill>
+<H3>fill Pseudo Opcode - Fill Memory</H3></A>
+<P>Syntax and examples:</P>
+<PRE>
+	fill	byte_to_fill_memory_with,num_of_bytes_to_fill
+</PRE>
+<P>FILL allows a user to fill memory with a byte. See my comments in zmb about 
+the value of these Pseudo Opcodes.</P>
+<P>Notes:</P>
+<UL>
+  <LI>Nice for initializing memory.</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>zmb</LI>
+</UL>
+<P>Useful With:</P>
+<UL>
+  <LI>Debugging</LI?
+  <LI>Filling unused non-volatile memory with a <strong>safe</strong> opcode when the 
+  processor gets lost.</LI>
+</UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Since RAM memory, by definition, cannot be initialized, this command has 
+  little use. This is because you must DOWNLOAD the s-records to make the 
+  clearing take place. Only in systems which have some sort of bootstrapping 
+  (where s-records are downloaded) would this be very useful. If you are 
+  clearing memory, you should probably count on routines to do it for you.</LI>
+</UL>
+<P></P>
+<HR>
+
+<A name=loc>
+<H3>loc Pseudo Opcode - creates automatically incrementing labels</H3></A>
+<strong>WARNING: Some people do not like to see this command used in your programs</strong>
+<P>Increments and produces an internal 
+counter used in conjunction with the backwards tick mark (`). By using LOC's 
+and the ` mark you can write code like the following without worrying about 
+thinking up new labels.</P>
+<PRE>
+        LOC
+        ldaa    #1
+loop`
+        deca
+        bra     loop`
+        LOC
+loop`
+        brset   0,x $55 loop`
+
+</PRE>
+<P>This code will work perfectly fine because the second loops label is really 
+loop002 and the first ones is loop001. The assembler really sees this:</P>
+<PRE> 
+        LOC
+        ldaa    #1
+loop001
+        deca
+        bra     loop001
+        LOC
+loop002
+        brset   0,x $55 loop002
+</PRE>
+<P>You may also seed the LOC with a valid expression or number by putting that 
+expression or number in the operand field. This gives you the ability to over 
+ride the automatic numbering. This is also sometimes handy if you need to keep 
+track of what your local variable is. (you lose track in the source if you 
+aren't careful, because the tick ' mark is the only thing you see).</P>
+<P></P>
+<HR>
+
+<P></P>
+<A name=opt>
+<H3>opt Pseudo Opcode - Assembler List Options</H3></A>
+<P>There are five permissible operands for this instruction:</P>
+<UL>
+  <LI>l - enable listing after <strong>opt nol</strong></LI>
+  <LI>nol - disable listing until <strong>opt l </strong>or end of source code</LI>
+  <LI>c - calculate execution time (clock cycles)</LI>
+  <LI>noc - stop calculating execution time</LI>
+  <LI>contc - continue calculating execution time </LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<A name=org>The org Pseudo Opcode - Origin</H3></A>
+<P>Specify the address in memory where the following code should be located.</P>
+<P>Syntax and examples:</P>
+<PRE>
+	org	value_to_set_program_counter_to
+	org	$800
+	org	MY_PROGRAM_START ; use a symbol defined elsewhere with EQU
+	org	LAST_MEMORY_LOCATION-(LAST_PROGRAM_BYTE-FIRST_PROGRAM_BYTE) ; calculate a value
+</PRE>
+<P>The org Pseudo Opcode allows the assembler's program counter to be set to a 
+value. This is useful for locating your software and its elements (tables, ram, 
+constants, etc) in useful (intelligent) locations within the memory space of the 
+microcontroller.</P>
+<P>In better multi-pass assemblers (not as11), the org statement is rarely used 
+because the code is located at the link, and not during compilation. Since as11 
+is a <strong>simple</strong> two-pass assembler, orgs must be used so that the code is 
+compiled where it is supposed to.</P>
+<P>Notes:</P>
+<UL>
+  <LI>When starting a new region of code, you can examine the s-record file and 
+  see how org affects the construction of that file.</LI>
+  <LI>It is better to use the form <strong>org label</strong> than <strong>org constant</strong> 
+  because the more constants that are buried within your code, the more 
+  difficult it is to reuse.</LI>
+  <LI>The less orgs you use, the more reusable your code is.</LI>
+</UL>
+<P>Related To:</P>
+<UL>
+  <LI>program counter because this sets its value</LI>
+  <LI>rmb and its cousins because they change the program counter </LI>
+</UL>
+<P>Things to look out for:</P>
+<UL>
+  <LI>Always find out where the orgs are in a program. This is the first key to 
+  understanding the program. </LI>
+</UL>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=redef></A>redef Pseudo Opcode - <strong>Redef</strong>ine</H3>
+<strong>WARNING: Some people do not like to see this command used in your programs</strong>
+<P>Used to redefine first operand (which must be a label) to value of second 
+operand (an expression)</P>
+<P>Example:</P><PRE>foo     equ     10
+        ldaa    #foo        ; Accumulator A gets value 10
+        redef   foo 12
+        ldab    #foo      ; Accumulator B gets value 12</PRE>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=rmb></A>rmb Pseudo Opcode - <strong>R</strong>eserve <strong>M</strong>emory <strong>B</strong>ytes</H3>
+<P>Equivalent to <strong>ds.b</strong> and <strong>ds</strong>.</P>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=rmw></A>rmw Pseudo Opcode - <strong>R</strong>eserve <strong>M</strong>emory <strong>W</strong>ords</H3>
+<P>Equivalent to <strong>ds.w</strong>.</P>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=zmb></A>zmb Pseudo Opcode - <strong>Z</strong>ero <strong>M</strong>emory <strong>B</strong>ytes</H3>
+<P>Operand specifies number of bytes to allocate and fill with zero. Similar to bss on some assemblers.
+</P>
+<P></P>
+<HR>
+
+<P></P>
+<H3><A name=mnemonics>as11 Opcode Mnemonics - Names for Machine Code Instructions</A></H3>
+<UL>
+      <li><b>ABA</b>&nbsp;-&nbsp;add accumulator B to accumulator A</li>
+      <li><b>ABX</b>&nbsp;-&nbsp;add accumulator B to index reg. X</li>
+      <li><b>ABY</b>&nbsp;-&nbsp;add accumulator B to index reg. Y</li>
+      <li><b>ADCA</b>&nbsp;-&nbsp;add with carry to A</li>
+      <li><b>ADCB</b>&nbsp;-&nbsp;add with carry to B</li>
+      <li><b>ADDA</b>&nbsp;-&nbsp;add without carry to A</li>
+      <li><b>ADDB</b>&nbsp;-&nbsp;add without carry to B</li>
+      <li><b>ADDD</b>&nbsp;-&nbsp;add double accumulator</li>
+      <li><b>ANDA</b>&nbsp;-&nbsp;logical and A</li>
+      <li><b>ANDB</b>&nbsp;-&nbsp;logical and B</li>
+      <li><b>ASL</b>&nbsp;-&nbsp;arithmetic shift left memory</li>
+      <li><b>ASLA</b>&nbsp;-&nbsp;arithmetic shift left A</li>
+      <li><b>ASLB</b>&nbsp;-&nbsp;arithmetic shift left B</li>
+      <li><b>ASLD</b>&nbsp;-&nbsp;arithmetic shift left double acc.</li>
+      <li><b>ASR</b>&nbsp;-&nbsp;arithmetic shift right memory</li>
+      <li><b>ASRA</b>&nbsp;-&nbsp;arithmetic shift right A</li>
+      <li><b>ASRB</b>&nbsp;-&nbsp;arithmetic shift right B</li>
+      <li><b>BCC</b>&nbsp;-&nbsp;branch if carry clear</li>
+      <li><b>BCLR</b>&nbsp;-&nbsp;clear bit(s) in memory</li>
+      <li><b>BCS</b>&nbsp;-&nbsp;branch if carry set</li>
+      <li><b>BEQ</b>&nbsp;-&nbsp;branch if equal</li>
+      <li><b>BGE</b>&nbsp;-&nbsp;branch if &gt;= zero</li>
+      <li><b>BGT</b>&nbsp;-&nbsp;branch if &gt; zero</li>
+      <li><b>BHI</b>&nbsp;-&nbsp;branch if higher</li>
+      <li><b>BHS</b>&nbsp;-&nbsp;branch if higher or same</li>
+      <li><b>BITA</b>&nbsp;-&nbsp;bit test A</li>
+      <li><b>BITB</b>&nbsp;-&nbsp;bit test B</li>
+      <li><b>BLE</b>&nbsp;-&nbsp;branch if &lt;= zero</li>
+      <li><b>BLO</b>&nbsp;-&nbsp;branch if lower</li>
+      <li><b>BLS</b>&nbsp;-&nbsp;branch if lower or same</li>
+      <li><b>BLT</b>&nbsp;-&nbsp;branch if &lt; zero</li>
+      <li><b>BMI</b>&nbsp;-&nbsp;branch if minus</li>
+      <li><b>BNE</b>&nbsp;-&nbsp;branch if not equal to zero</li>
+      <li><b>BPL</b>&nbsp;-&nbsp;branch if plus</li>
+      <li><b>BRA</b>&nbsp;-&nbsp;branch always</li>
+      <li><b>BRCLR</b>&nbsp;-&nbsp;branch if bit(s) clear</li>
+      <li><b>BRN</b>&nbsp;-&nbsp;branch never</li>
+      <li><b>BRSET</b>&nbsp;-&nbsp;branch if bit(s) set</li>
+      <li><b>BSET</b>&nbsp;-&nbsp;set bit(s) in memory</li>
+      <li><b>BSR</b>&nbsp;-&nbsp;branch to subroutine</li>
+      <li><b>BVC</b>&nbsp;-&nbsp;branch if overflow clear</li>
+      <li><b>BVS</b>&nbsp;-&nbsp;branch if overflow set</li>
+      <li><b>CBA</b>&nbsp;-&nbsp;compare accumulators</li>
+      <li><b>CLC</b>&nbsp;-&nbsp;clear carry</li>
+      <li><b>CLI</b>&nbsp;-&nbsp;clear interrupt mask</li>
+      <li><b>CLR</b>&nbsp;-&nbsp;clear memory</li>
+      <li><b>CLRA</b>&nbsp;-&nbsp;clear A</li>
+      <li><b>CLRB</b>&nbsp;-&nbsp;clear B</li>
+      <li><b>CLV</b>&nbsp;-&nbsp;clear two's complement overflow bit</li>
+      <li><b>CMPA</b>&nbsp;-&nbsp;compare A</li>
+      <li><b>CMPB</b>&nbsp;-&nbsp;compare B</li>
+      <li><b>COM</b>&nbsp;-&nbsp;complement memory</li>
+      <li><b>COMA</b>&nbsp;-&nbsp;complement A</li>
+      <li><b>COMB</b>&nbsp;-&nbsp;complement B</li>
+      <li><b>CPD</b>&nbsp;-&nbsp;compare accumulator D</li>
+      <li><b>CPX</b>&nbsp;-&nbsp;compare index reg. X</li>
+      <li><b>CPY</b>&nbsp;-&nbsp;compare index reg. Y</li>
+      <li><b>DAA</b>&nbsp;-&nbsp;decimal adjust A</li>
+      <li><b>DEC</b>&nbsp;-&nbsp;decrement memory</li>
+      <li><b>DECA</b>&nbsp;-&nbsp;decrement A</li>
+      <li><b>DECB</b>&nbsp;-&nbsp;decrement B</li>
+      <li><b>DES</b>&nbsp;-&nbsp;decrement stack pointer</li>
+      <li><b>DEX</b>&nbsp;-&nbsp;decrement index register X</li>
+      <li><b>DEY</b>&nbsp;-&nbsp;decrement index register Y</li>
+      <li><b>EORA</b>&nbsp;-&nbsp;exclusive or A</li>
+      <li><b>EORB</b>&nbsp;-&nbsp;exclusive or B</li>
+      <li><b>FDIV</b>&nbsp;-&nbsp;fractional divide</li>
+      <li><b>IDIV</b>&nbsp;-&nbsp;integer divide</li>
+      <li><b>INC</b>&nbsp;-&nbsp;increment memory</li>
+      <li><b>INCA</b>&nbsp;-&nbsp;increment A</li>
+      <li><b>INCB</b>&nbsp;-&nbsp;increment B</li>
+      <li><b>INS</b>&nbsp;-&nbsp;increment stack pointer</li>
+      <li><b>INX</b>&nbsp;-&nbsp;increment index register X</li>
+      <li><b>INY</b>&nbsp;-&nbsp;increment index register Y</li>
+      <li><b>JMP</b>&nbsp;-&nbsp;jump</li>
+      <li><b>JSR</b>&nbsp;-&nbsp;jump to subroutine</li>
+      <li><b>LDAA</b>&nbsp;-&nbsp;load accumulator A</li>
+      <li><b>LDAB</b>&nbsp;-&nbsp;load accumulator B</li>
+      <li><b>LDD</b>&nbsp;-&nbsp;load double accumulator</li>
+      <li><b>LDS</b>&nbsp;-&nbsp;load stack pointer</li>
+      <li><b>LDX</b>&nbsp;-&nbsp;load index register X</li>
+      <li><b>LDY</b>&nbsp;-&nbsp;load index register Y</li>
+      <li><b>LSL</b>&nbsp;-&nbsp;logical shift left memory</li>
+      <li><b>LSLA</b>&nbsp;-&nbsp;logical shift left A</li>
+      <li><b>LSLB</b>&nbsp;-&nbsp;logical shift left B</li>
+      <li><b>LSLD</b>&nbsp;-&nbsp;logical shift left double</li>
+      <li><b>LSR</b>&nbsp;-&nbsp;logical shift right memory</li>
+      <li><b>LSRA</b>&nbsp;-&nbsp;logical shift right A</li>
+      <li><b>LSRB</b>&nbsp;-&nbsp;logical shift right B</li>
+      <li><b>LSRD</b>&nbsp;-&nbsp;logical shift right double accumulator</li>
+      <li><b>MUL</b>&nbsp;-&nbsp;multiply unsigned</li>
+      <li><b>NEG</b>&nbsp;-&nbsp;negate memory</li>
+      <li><b>NEGA</b>&nbsp;-&nbsp;negate A</li>
+      <li><b>NEGB</b>&nbsp;-&nbsp;negate B</li>
+      <li><b>NOP</b>&nbsp;-&nbsp;no operation</li>
+      <li><b>ORAA</b>&nbsp;-&nbsp;inclusive or A</li>
+      <li><b>ORAB</b>&nbsp;-&nbsp;inclusive or B</li>
+      <li><b>PSHA</b>&nbsp;-&nbsp;push A onto stack</li>
+      <li><b>PSHB</b>&nbsp;-&nbsp;push B onto stack</li>
+      <li><b>PSHX</b>&nbsp;-&nbsp;push index reg. X onto stack</li>
+      <li><b>PSHY</b>&nbsp;-&nbsp;push index reg. Y onto stack</li>
+      <li><b>PULA</b>&nbsp;-&nbsp;pull A from stack</li>
+      <li><b>PULB</b>&nbsp;-&nbsp;pull B from stack</li>
+      <li><b>PULX</b>&nbsp;-&nbsp;pull index reg. X from stack</li>
+      <li><b>PULY</b>&nbsp;-&nbsp;pull index reg. Y from stack</li>
+      <li><b>ROL</b>&nbsp;-&nbsp;rotate left memory</li>
+      <li><b>ROLA</b>&nbsp;-&nbsp;rotate left A</li>
+      <li><b>ROLB</b>&nbsp;-&nbsp;rotate left B</li>
+      <li><b>ROR</b>&nbsp;-&nbsp;rotate right memory</li>
+      <li><b>RORA</b>&nbsp;-&nbsp;rotate right A</li>
+      <li><b>RORB</b>&nbsp;-&nbsp;rotate right B</li>
+      <li><b>RTI</b>&nbsp;-&nbsp;return from interrupt</li>
+      <li><b>RTS</b>&nbsp;-&nbsp;return from subroutine</li>
+      <li><b>SBA</b>&nbsp;-&nbsp;subtract accumulators</li>
+      <li><b>SBCA</b>&nbsp;-&nbsp;subtract with carry from A</li>
+      <li><b>SBCB</b>&nbsp;-&nbsp;subtract with carry from B</li>
+      <li><b>SEC</b>&nbsp;-&nbsp;set carry</li>
+      <li><b>SEI</b>&nbsp;-&nbsp;set interrupt mask</li>
+      <li><b>SEV</b>&nbsp;-&nbsp;set two's complement overflow bit</li>
+      <li><b>STAA</b>&nbsp;-&nbsp;store accumulator A</li>
+      <li><b>STAB</b>&nbsp;-&nbsp;store accumulator B</li>
+      <li><b>STD</b>&nbsp;-&nbsp;store double accumulator</li>
+      <li><b>STOP</b>&nbsp;-&nbsp;stop processing</li>
+      <li><b>STS</b>&nbsp;-&nbsp;store stack pointer</li>
+      <li><b>STX</b>&nbsp;-&nbsp;store index register X</li>
+      <li><b>STY</b>&nbsp;-&nbsp;store index register Y</li>
+      <li><b>SUBA</b>&nbsp;-&nbsp;subtract A</li>
+      <li><b>SUBB</b>&nbsp;-&nbsp;subtract B</li>
+      <li><b>SUBD</b>&nbsp;-&nbsp;subtract double accumulator</li>
+      <li><b>SWI</b>&nbsp;-&nbsp;software interrupt</li>
+      <li><b>TAB</b>&nbsp;-&nbsp;transfer from acc. A to acc. B</li>
+      <li><b>TAP</b>&nbsp;-&nbsp;transfer from acc. A to CCR</li>
+      <li><b>TBA</b>&nbsp;-&nbsp;transfer from acc. B to acc. A</li>
+      <li><b>TPA</b>&nbsp;-&nbsp;transfer from CCR to accumulator A</li>
+      <li><b>TRAP</b>&nbsp;-&nbsp;unimplemented opcode trap</li>
+      <li><b>TST</b>&nbsp;-&nbsp;test memory</li>
+      <li><b>TSTA</b>&nbsp;-&nbsp;test A</li>
+      <li><b>TSTB</b>&nbsp;-&nbsp;test B</li>
+      <li><b>TSX</b>&nbsp;-&nbsp;transfer from SP to index reg. X</li>
+      <li><b>TSY</b>&nbsp;-&nbsp;transfer from SP to index reg. Y</li>
+      <li><b>TXS</b>&nbsp;-&nbsp;transfer from index reg. X to SP</li>
+      <li><b>TYS</b>&nbsp;-&nbsp;transfer from index reg. Y to SP</li>
+      <li><b>WAI</b>&nbsp;-&nbsp;wait for interrupts</li>
+      <li><b>XGDX</b>&nbsp;-&nbsp;exchange double acc. and index reg. X</li>
+      <li><b>XGDY</b>&nbsp;-&nbsp;exchange double acc. and index reg. Y</li>
+</UL>
+<P></P>
+
+
+</HTML>

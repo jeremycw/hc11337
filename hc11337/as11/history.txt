@@ -1,0 +1,89 @@
+-- Eric Engler <englere.geo@yahoo.com> | 7 Jul 2005
+* Added a form-feed character to the beginning of the symbol file. This is used by legacy
+  programs to identify the file format.
+
+-- Eric Engler <englere.geo@yahoo.com>
+* Added banner info into the list file output
+
+-- Matthew Kincaid <matthew@kincaid.name> | Mon, 7 Mar 2005
+* Fixed debugging output so that it will not crash on attempting to output a % character.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Sat, 5 Mar 2005
+* Fixed the list code to prevent garbage output and to keep tabs in source file lined up as 
+  close as possible under all conditions.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Thur, 3 Mar 2005
+* mov instructions with two indexed addressing operands should work
+
+-- Matthew Kincaid <matthew@kincaid.name> | Wed, 2 Mar 2005
+* Oops, operands can be strings which might not want to be lower case. They are case sensitive again.
+* Added a loop in lookup() to mapdn the label names before looking up.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Tue, 1 Mar 2005
+* Any letters in Operand column are now converted into lowercase.
+* Changed error output to say Error instead of Warning
+* Lines with only a label now display program counter in list file.
+* Total cycle count is on it's own line and won't display if any errors have occurred.
+* Added switch to enable line numbers in list file.
+* Arranged list output to stay nice even when assembling large applications with 1000's of lines.
+* Changed format of command line list file options.
+* Removed Cprintf() function
+* List file can now be printed to a file and console in any combination.
+* Moved most of the variables being initialized into initialize() function.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Mon, 28 Feb 2005
+* Changed wording of "Missing Expression, 0 assumed" to "Missing Expression, value 0 assumed"
+* Added warning when numbers are truncated by assembler.
+* The assembler will now fail if given a bad number in get_term()
+
+-- Matthew Kincaid <matthew@kincaid.name> | Sun, 27 Feb 2005
+* Added support for decimal numbers to be represented with ! character.
+* Removed case sensitivity to label names
+
+-- Matthew Kincaid <matthew@kincaid.name> | Thurs, 24 Feb 2005
+* Removed code that didn't allow arithmetic on masks.
+* Operands can no longer have spaces in them. Spaces separate operands or fields.
+* Moved suck_out_commas() to util.h
+* Added a is_index_reg() function to do11.c code
+* Changed uses of any() to find deliminator with delim() in do12.c. Spaces and tabs should be recognized as delimators.
+* Added do12.c more stringent indexed register logic to do11.c
+* Added ; to list of comment characters in parse_line()
+* Fixed problem with cycle count doubling the total count.
+* Pseudo op OPT now accepts multiple options dileminated by commas.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Wed, 23 Feb 2005
+* Pointer in Cprintf function should have been incremented before evaluation.
+* Fixed problem with garbage being outputted on empty lines.
+* Cycles were being summed before calculated in void process( )
+
+-- Matthew Kincaid <matthew@kincaid.name> | Sun, 20 Feb 2005
+* Removed program header from list file, also modified the program title.
+* as.c, line 147: Removed '*' from argv[i]. Bad arguments no longer crash assembler.
+* Moved executed time to bottom of list file
+* Moved error and warning messages onto one line.
+* Added logic to prevent '-' at beginning of filenames. Usually inadvertently by putting option before filename.
+* Added -c argument to display cycle count.
+* Added -nol argument to suppress listing output
+* Now only checks for OPT pseudo code on Pass 2. This prevents OPT from overwriting argument options on Pass 1.
+* Fixed typo in print_line function when printing cycle count.
+* Added total cycle count to instruction cycle count in list file (again).
+* Added total assembled code cycle count in list file.
+* Removed extra head() function prototype from funcs.h
+* Removed extra eword() function prototype from funcs.h
+* Removed other various duplicate function prototypes from funcs.h.
+
+-- Matthew Kincaid <matthew@kincaid.name> | Sat, 19 Feb 2005
+* Added support for MC68HC11 processor.
+* main() returns the number of errors on exit.
+* Removed code that assumed a DOS path.
+* Migrated FGETS() function from AS11 compiler for more UNIX support.
+* Changed the format of the error and warning message.
+* Removed Mail_Program[] array since it wasn't used.
+* Disabled arithmetic evaluation on MASK operands.
+* Commented out initializing code that cleared Cflag. This may or may not be good, but it's not being used anyways so I thought it b
+
+est until I figure why it was put there.
+* Removed running total of cycle count from list file output with cycles flag. It really cluttered up the list file.
+* Fixed list output to look pretty when tabs are used in the assembler code.
+* Added Cprintf function to handle % characters.
+* Commented out strlwr, I like case sensitive labels.
