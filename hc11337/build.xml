@@ -1,4 +1,4 @@
-<project name="HC11337" default="dist" basedir=".">
+<project name="HC11337" default="release" basedir=".">
     <description>
         simple example build file
     </description>
@@ -12,6 +12,7 @@
     <tstamp/>
     <!-- Create the build directory structure used by compile -->
     <mkdir dir="${build}"/>
+    <mkdir dir="hc11337-${DSTAMP}"/>
   </target>
 
   <target name="compile" depends="init"
@@ -21,16 +22,60 @@
   </target>
 
   <target name="dist" depends="compile"
-        description="generate the distribution" >
+        description="generate the distribution">
     <!-- Put everything in ${build} into the hc11337.jar file -->
-    <jar jarfile="hc11337.jar" manifest="Manifest" basedir="${build}"/>
-  	<chmod file="hc11337.jar" perm="ugo+rx"/>
+    <jar jarfile="hc11337-${DSTAMP}/hc11337.jar" manifest="Manifest" basedir="${build}"/>
+  	<chmod file="hc11337-${DSTAMP}/hc11337.jar" perm="ugo+rx"/>
+  	<copy todir="hc11337-${DSTAMP}/lib">
+  	    <fileset dir="lib"/>
+  	</copy>
+  	<copy todir="hc11337-${DSTAMP}/icons">
+  	  	    <fileset dir="icons"/>
+  	  	</copy>
+  	<copy todir="hc11337-${DSTAMP}/workspace">
+  	  	    <fileset dir="workspace"/>
+  	</copy>
+  	<copy todir="hc11337-${DSTAMP}/lib">
+  	  	    <fileset dir="lib"/>
+  	</copy>
+  	<copy file="hc11.syn" todir="hc11337-${DSTAMP}"/>
+  </target>
+	
+<target name="release" depends="os.specific.nix"/>
+	
+  <target name="os.specific.win" depends="os.check" if="osIsWindows">
+  	<copy file="as11/as11-win" tofile="hc11337-${DSTAMP}/as11.exe"/>
+  	<move file="hc11337-${DSTAMP}/lib/swt-win.jar" tofile="hc11337-${DSTAMP}/lib/swt.jar"/>
+  	<delete file="hc11337-${DSTAMP}/lib/swt-nix.jar"/>
+  </target>
+	
+  <target name="os.specific.nix" depends="os.specific.win" if="osIsUnix">
+  	<copy file="as11/as11-nix" tofile="hc11337-${DSTAMP}/as11"/>
+  	<move file="hc11337-${DSTAMP}/lib/swt-nix.jar" tofile="hc11337-${DSTAMP}/lib/swt.jar"/>
+  	<delete file="hc11337-${DSTAMP}/lib/swt-win.jar"/>
+  	<chmod file="hc11337-${DSTAMP}/as11" perm="ugo+rx"/>
+  </target>
+	
+  <target name="os.check" depends="dist">
+  	<echo message="Checking OS type..."/>
+  	<condition property="osIsUnix">
+  		<os family="unix"/>
+  	</condition>
+  	<condition property="osIsWindows">
+  		<os family="windows"/>
+  	</condition>
   </target>
 
   <target name="clean"
         description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
     <delete dir="${build}"/>
-    <delete dir="${dist}"/>
+    <delete dir="hc11337-${DSTAMP}"/>
   </target>
+	
+	<target name="doc"
+	        description="build javadoc" >
+		<mkdir dir="doc"/>
+	    <javadoc destdir="doc" sourcepath="src"/>
+	</target>
 </project>
