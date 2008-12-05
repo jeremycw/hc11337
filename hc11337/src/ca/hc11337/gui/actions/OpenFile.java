@@ -19,6 +19,8 @@ package ca.hc11337.gui.actions;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import ca.hc11337.gui.HC11337Controller;
 

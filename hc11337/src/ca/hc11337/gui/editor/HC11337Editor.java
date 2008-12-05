@@ -43,7 +43,7 @@ public class HC11337Editor {
 		fileEditor = new StyledText (parent, SWT.BORDER | SWT.H_SCROLL| SWT.V_SCROLL);
 		editorTab.setControl(fileEditor);
 		fileEditor.setTabs(8);
-		fileEditor.setFont(new Font(Display.getCurrent(), "Fixedsys", 10, SWT.NORMAL));
+		fileEditor.setFont(new Font(Display.getCurrent(), "Monospace", 10, SWT.NORMAL));
 		fileEditor.addKeyListener(new MyKeyListener(controller));
 		parent.pack();
 	}
