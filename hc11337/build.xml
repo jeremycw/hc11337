@@ -6,7 +6,7 @@
   <property name="src" location="src"/>
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
- 
+
   <target name="init">
     <!-- Create the time stamp -->
     <tstamp/>
@@ -24,6 +24,7 @@
         description="generate the distribution" >
     <!-- Put everything in ${build} into the hc11337.jar file -->
     <jar jarfile="hc11337.jar" manifest="Manifest" basedir="${build}"/>
+  	<chmod file="hc11337.jar" perm="ugo+rx"/>
   </target>
 
   <target name="clean"
