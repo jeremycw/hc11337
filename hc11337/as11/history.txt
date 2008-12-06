@@ -1,3 +1,7 @@
+-- Eric Engler <englere.geo@yahoo.com> | 25 Feb 2006
+* Added a form-feed character to the beginning of the list file. This is used by legacy
+  programs to identify the file format.
+
 -- Eric Engler <englere.geo@yahoo.com> | 7 Jul 2005
 * Added a form-feed character to the beginning of the symbol file. This is used by legacy
   programs to identify the file format.
@@ -80,10 +84,18 @@
 * Changed the format of the error and warning message.
 * Removed Mail_Program[] array since it wasn't used.
 * Disabled arithmetic evaluation on MASK operands.
-* Commented out initializing code that cleared Cflag. This may or may not be good, but it's not being used anyways so I thought it b
-
-est until I figure why it was put there.
+* Commented out initializing code that cleared Cflag. This may or may not be good, but it's not being used anyways so I thought it best until I figure why it was put there.
 * Removed running total of cycle count from list file output with cycles flag. It really cluttered up the list file.
 * Fixed list output to look pretty when tabs are used in the assembler code.
 * Added Cprintf function to handle % characters.
 * Commented out strlwr, I like case sensitive labels.
+
+-- Tom Almy almy.us | 25 Feb 2006
+* added a form-feed character to the beginning of the list file. This is used by legacy
+  programs to identify the file format.
+
+-- Eric Engler <englere.geo@yahoo.com> | 14 Apr 2006
+* added an "#endinclude" statement that will automatically be inserted into
+  the list file at the end of every included file. This is used by the Pluto
+  debugger to automatically "fold" the include files.
+

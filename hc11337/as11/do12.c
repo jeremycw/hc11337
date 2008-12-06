@@ -814,7 +814,7 @@ do_gen (int op, int mode)
       printf ("eval20\n");
     eval ();
     if(( Result < 0 || Result > 255) && Pass == 2)
-      warn( "Value to large and has been masked to 0xFF" );	
+      warn( "Value too large and has been masked to 0xFF" );	
     emit (lobyte (Result));
     break;
 
@@ -851,7 +851,7 @@ do_gen (int op, int mode)
         emit (op + 0x10);
       }
       if(( Result < 0 || Result > 255) && Pass == 2)
-        warn( "Value to large and has been masked to 0xFF" );
+        warn( "Value too large and has been masked to 0xFF" );
       emit (lobyte (Result));
       Cycles++;
       break;

@@ -145,16 +145,13 @@ main (int argc, char *argv[])
 	  WarnStopped = 1;
 	else {
 	   printf ("\nIllegal or unknown option %s.", argv[i]);
-           printf ("\nType '%s' with no arguments to get a short commandline description.\n",
-           argv[0]);
-        	exit (EXIT_SUCCESS);
+           printf ("\nType '%s' with no arguments to get a short commandline description.\n", argv[0]);
+           exit (EXIT_SUCCESS);
 	}
 	break;
       default:
         printf ("\nIllegal or unknown option %s.", argv[i]);
-        printf
-          ("\nType '%s' with no arguments to get a short commandline description.\n",
-           argv[0]);
+        printf ("\nType '%s' with no arguments to get a short commandline description.\n", argv[0]);
         exit (EXIT_SUCCESS);
         break;
       }
@@ -168,6 +165,7 @@ main (int argc, char *argv[])
       break;
     }
   }
+
   N_files = argc - 1;
   initialize ();
 #if defined(applec) || defined(__SC__)
@@ -175,8 +173,8 @@ main (int argc, char *argv[])
 #endif
   sprintf (S0_buffer, "Binary Creator: %s %s\n", *argv, Version);
   sprintf (S0_buffer, "%sCommand Line: %s\n", S0_buffer, command_line);
-
-  sprintf (buffer, "%s, an absolute assembler for Motorola MCU's, version %s\n\n", PROG_NAME, PROG_VERSION, PROG_BUILD);
+	/* TAA -- added \n to start of string in next line 01/06 */
+  sprintf (buffer, "\n%s, an absolute assembler for Motorola MCU's, version %s\n\n", PROG_NAME, PROG_VERSION, PROG_BUILD);
   Bprintf (buffer);
 
 
@@ -205,7 +203,7 @@ main (int argc, char *argv[])
       if (This_Files_Path[0] == '\0')   /* Build file name to open file */
         strcpy (buffer2, This_File);
       else
-        sprintf (buffer2, "%s%s", This_Files_Path, This_File); /*MWK don't assume dos paths */
+        sprintf (buffer2, "%s%s", This_Files_Path, This_File); /*MWK don't assume MSDOS paths */
 
       if ((Fd = fopen (buffer2, "r")) == NULL) {
         printf ("Can't open file %s in pass %d\n", buffer2, Pass);
@@ -287,20 +285,23 @@ initialize (void)
   Pass = 1;
   InIf = 0;
   
-  if (Oflag)
+  if (Oflag) {
      if ((Lstfil = fopen (Lst_name, "w"))==NULL) {
         Oflag = 0;
         sprintf(buffer, "Can't write to list file, '%s'", Lst_name);
      	fatal(buffer);
      }
+  }
   
   Line[MAXBUF - 1] = '\n';   /* guard against garbage input */
   strcpy (Loc_Lab, "1");
   Total_Pseudo = pseudo_init ();
+
   if ((Objfil = fopen (Obj_name, "w")) == NULL) {
     sprintf(buffer,"Can't write to S-record file, '%s'",Obj_name);
     fatal (buffer);
   }
+
   fwdinit ();                   /* forward ref init */
 }
 
@@ -386,20 +387,37 @@ getaline (void)
   int remaining = MAXBUF - 2;   /* space left in Line */
   int len;                      /* line length */
   char *r;
-
-  while (((r = FGETS (p, remaining, Fd)) != (char *) NULL) || (is_inside_include () == 1)) {
-    if (r != NULL) {
+ 
+  // Continue in this loop if the current asm file has more data OR if we're in an include file.
+  // If we're in an include file and we reach EOF, we'll pop back to the previous file.
+  while (((r = FGETS (p, remaining, Fd)) != (char *) NULL) || (is_inside_include () == 1)) 
+  {
+    // if r is NULL then we know we're at the end of an include file, or else we would
+    // have exited from the loop.
+    if (r != NULL) 
+    {
       Line_num++;
       if ((len = strlen (p) - 2) <= 0)
         return (1);             /* just an empty line */
+
       p += len;
       if (*p != '\\')
         return (1);             /* not a continuation */
+
       remaining -= len + 2;
       if (remaining < 3)
         warn ("Continuation too long");
     }
-    else {
+    else
+    {
+      if (Pass == 2)
+      {
+        // EOF in include file, so we'll back up to a previous file
+        Lprintf("                        #endinclude\n\n");
+      }
+
+      // due to poor code design, this call will open the first file, in addition to going back
+      // toearlier files:
       pop_include ();
       remaining = MAXBUF - 2;
       p = Line;
@@ -455,7 +473,7 @@ push_include (char *new_fname)
     name[0] = 0;
     if (strlen (This_Files_Path) > 0) {
       strcpy (name, This_Files_Path);
-//      strcat (name, "\\"); MWK Don't want to assume DOS path
+//      strcat (name, "\\"); MWK Don't want to assume MSDOS path
     }
     strcat (name, new_fname);
     F_new = fopen (name, "r");
@@ -469,7 +487,7 @@ push_include (char *new_fname)
   /* If it failed, try the Master_Libs directory */
   if ((F_new == NULL) && (strlen (Master_Libs) > 0)) {
     strcpy (name, Master_Libs);
-//    strcat (name, "\\"); MWK Don't want to assume DOS path
+//    strcat (name, "\\"); MWK Don't want to assume MSDOS path
     strcat (name, new_fname);
     F_new = fopen (name, "r");
   }
@@ -545,10 +563,12 @@ parse_line (void)
     if (strncmp ("ife", ptrfrm + 1, 3) == 0) {
       ptr1 = get_start_of_next_word (ptrfrm);
       ptr1 = word_to_string (Label, ptr1, " \t;\n,");
+
       if (*ptr1 != ',') {
         error ("Expected comma in #ifeq statement.");
         return (0);
       }
+
       ptr1++;
       Optr = ptr1;
       if (Debug)
@@ -653,6 +673,7 @@ parse_line (void)
       *ptrto++ = mapdn (*ptrfrm++);
     }
   }
+
   *ptrto = NULL;
   ptrfrm = skip_white (ptrfrm);
 

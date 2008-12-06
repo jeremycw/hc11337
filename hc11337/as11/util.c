@@ -151,16 +151,20 @@ emit (int byte)
     sprintf (buffer, "%2x @ %4x\n", byte, Pc);
     printf (buffer);
   }
+
   if (Pass == 1) {
     Pc++;
     return (YES);
   }
   if (P_total < P_LIMIT)
     P_bytes[P_total++] = byte;
+
   E_bytes[E_total++] = byte;
   Pc++;
+
   if (E_total == E_LIMIT)
     f_record();
+
   return (0);
 }
 
@@ -208,10 +212,12 @@ s0_record (void)
   hexout (e_total + 3);         /* byte count +3 */
   hexout (0);                   /* high byte of PC */
   hexout (0);                   /* low byte of PC */
+
   for (i = 0; i < e_total; i++) {
     chksum += lobyte (out_string[i]);
     hexout (lobyte (out_string[i]));    /* data byte */
   }
+
   chksum = ~chksum;             /* one's complement */
   hexout (lobyte (chksum));     /* checksum */
   fprintf (Objfil, "\n");
@@ -231,10 +237,12 @@ f_record (void)
 
   if (Pass == 1)
     return (0);
+
   if (E_total == 0) {
     E_pc = Pc;
     return (0);
   }
+
   F_total += E_total;           /* total bytes in file ver (TER)2.01 19 Jun 89 */
   chksum = E_total + 3;         /* total bytes in this record */
   chksum += lobyte (E_pc);
@@ -243,10 +251,12 @@ f_record (void)
   hexout (E_total + 3);         /* byte count +3 */
   hexout (E_pc >> 8);           /* high byte of PC */
   hexout (lobyte (E_pc));       /* low byte of PC */
+
   for (i = 0; i < E_total; i++) {
     chksum += lobyte (E_bytes[i]);
     hexout (lobyte (E_bytes[i]));       /* data byte */
   }
+
   chksum = ~chksum;             /* one's complement */
   hexout (lobyte (chksum));     /* checksum */
   fprintf (Objfil, "\n");
@@ -371,7 +381,7 @@ print_line (void)
 
   for (; i < P_total; i++) {    /* this is for lines that produce more than 6 bytes of assembly code */
     if (i % 6 == 0)
-     Lprintf ("\n    ");
+      Lprintf ("\n    ");
     sprintf (buffer, " %02x", lobyte (P_bytes[i]));
     Lprintf (buffer);
   }

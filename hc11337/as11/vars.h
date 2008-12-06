@@ -10,7 +10,7 @@
  ***************************************************************************/
  
 #define  PROG_TITLE  "The Freeware Motorola Assembler"
-#define  PROG_VERSION  "1.2e"
+#define  PROG_VERSION  "1.2h"
 #define  PROG_BUILD    "1"
 
 extern char PROG_NAME[5];  /* actual name is in do11.c or do12.c */
