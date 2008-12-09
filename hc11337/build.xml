@@ -39,16 +39,18 @@
   	<copy file="hc11.syn" todir="hc11337"/>
   </target>
 	
-<target name="release" depends="os.specific.nix"/>
+  <target name="release" depends="os.specific.nix">
+    <echo message="Done."/>
+  </target>
 	
   <target name="os.specific.win" depends="os.check" if="osIsWindows">
-  	<copy file="as11/as11-win" tofile="hc11337/as11.exe"/>
+  	<copy file="as11/as11.exe" tofile="hc11337/as11.exe"/>
   	<move file="hc11337/lib/swt-win.jar" tofile="hc11337/lib/swt.jar"/>
   	<delete file="hc11337/lib/swt-nix.jar"/>
   </target>
 	
   <target name="os.specific.nix" depends="os.specific.win" if="osIsUnix">
-  	<copy file="as11/as11-nix" tofile="hc11337/as11"/>
+  	<copy file="as11/as11" tofile="hc11337/as11"/>
   	<move file="hc11337/lib/swt-nix.jar" tofile="hc11337/lib/swt.jar"/>
   	<delete file="hc11337/lib/swt-win.jar"/>
   	<chmod file="hc11337/as11" perm="ugo+rx"/>
