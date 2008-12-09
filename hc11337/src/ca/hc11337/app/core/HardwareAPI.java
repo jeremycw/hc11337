@@ -17,8 +17,11 @@
 package ca.hc11337.app.core;
 
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import ca.hc11337.app.core.hardwaremodel.HardwareInterface;
+import ca.hc11337.app.core.hardwaremodel.UnsignedNumber;
 
 public class HardwareAPI {
 	private HardwareInterface hardware = new HardwareInterface();
@@ -56,5 +59,10 @@ public class HardwareAPI {
 	public void execute()
 	{
 		hardware.execute();
+	}
+	
+	public Hashtable<Integer, Integer> getUsedMemory()
+	{
+		return hardware.dumpUsedMem();
 	}
 }

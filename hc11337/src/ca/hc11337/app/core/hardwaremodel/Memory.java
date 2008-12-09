@@ -19,15 +19,16 @@ package ca.hc11337.app.core.hardwaremodel;
 import java.util.*;
 
 public class Memory {
-	private Vector<UnsignedNumber> mem = new Vector<UnsignedNumber>();
+	//private Vector<UnsignedNumber> mem = new Vector<UnsignedNumber>();
 	private Vector<Integer> changedAddresses = new Vector<Integer>();
+	private Hashtable<Integer, UnsignedNumber> mem = new Hashtable<Integer, UnsignedNumber>();
 	
 	public Memory()
 	{
-		for(int i = 0; i <= 65535; i++)
+		/*for(int i = 0; i <= 65535; i++)
 		{
 			mem.add(new UnsignedNumber(0,1));
-		}
+		}*/
 	}
 	
 	public UnsignedNumber read(int address)
@@ -58,7 +59,7 @@ public class Memory {
 		for(int i = 0; i < val.getBytes(); i++)
 		{
 			UnsignedNumber piece = new UnsignedNumber(val.getByte(i), 1);
-			mem.set(addr.getVal(), piece);
+			mem.put(addr.getVal(), piece);
 			changedAddresses.add(addr.getVal());
 			addr.inc();
 		}
@@ -69,7 +70,7 @@ public class Memory {
 		for(int i = 0; i < val.getBytes(); i++)
 		{
 			UnsignedNumber piece = new UnsignedNumber(val.getByte(i), 1);
-			mem.set(address, piece);
+			mem.put(address, piece);
 			changedAddresses.add(address);
 			address++;
 		}
@@ -86,5 +87,10 @@ public class Memory {
 		for(int i = 0; i < changedAddresses.size(); i++)
 			addr[i] = changedAddresses.get(i);
 		return addr;
+	}
+	
+	public Hashtable<Integer, UnsignedNumber> getMemTable()
+	{
+		return mem;
 	}
 }

@@ -16,6 +16,9 @@
 
 package ca.hc11337.gui.memoryview;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -23,13 +26,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 
-import ca.hc11337.gui.cpuview.CPUViewContentProvider;
-import ca.hc11337.gui.cpuview.CPUViewLabelProvider;
-
 public class HC11337Memory {
 	private final TableViewer memViewer;
 	private int[][] data;
 	private TableColumn[] columns = new TableColumn[17];
+	private ArrayList<Integer> addrInUse = new ArrayList<Integer>();
 	
 	public HC11337Memory(Composite parent, int style)
 	{
@@ -46,7 +47,7 @@ public class HC11337Memory {
 		memViewer.setLabelProvider(new MemoryViewLabelProvider());
 		
 		for(int i = 0; i <= 0x10; i++){
-			columns[i] = new TableColumn(memViewer.getTable(), SWT.CENTER);
+			columns[i] = new TableColumn(memViewer.getTable(), SWT.LEFT);
 		}
 
 		for(int i = 1; i <= 0x10; i++){
@@ -79,5 +80,18 @@ public class HC11337Memory {
 		if(num.length() == 1)
 			num = "0"+num;
 		memViewer.getTable().getItem(row).setText(col+1, num);
+		addrInUse.add(row*0x10 + col);
+	}
+	
+	public void reset()
+	{
+		Iterator<Integer> itr = addrInUse.iterator();
+		while(itr.hasNext())
+		{
+			int val = itr.next().intValue();
+			data[val/0x10][val%0x10] = 0;
+			memViewer.getTable().getItem(val/0x10).setText((val%0x10)+1, "00");
+		}
+		addrInUse.clear();
 	}
 }

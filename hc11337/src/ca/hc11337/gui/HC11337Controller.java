@@ -25,25 +25,29 @@ import ca.hc11337.app.core.*;
 public class HC11337Controller implements Observer {
 
 	private final HC11337GUI view;
-	private final HC11337Core model;
+	private HC11337Core model;
+	private Vector<HC11337Core> models = new Vector<HC11337Core>();
 	private int newFileCount = 0;
 	
 	public HC11337Controller(HC11337GUI gui, HC11337Core core)
 	{
 		view = gui;
-		model = core;
-		model.addObserver(view);
-		model.addObserver(this);
+		//model = core;
+		//model.addObserver(view);
+		//model.addObserver(this);
+		//models.add(core);
 	}
 	
 	/**
-	 * Governs the "New File" user action
+	 * Controls the "New File" user action
 	 */
 	public void newFile()
 	{
 		try{
 			view.newEditorTab("Untitled-"+newFileCount+".asm");
-			model.newEditor("Untitled-"+newFileCount+".asm");
+			model = new HC11337Core("Untitled-"+newFileCount+".asm");
+			model.addObserver(view);
+			model.addObserver(this);
 			view.switchEditor(view.getNumberOfTabs()-1);
 			newFileCount++;
 		}catch(Exception e){
@@ -52,7 +56,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Close File" user action
+	 * Controls the "Close File" user action
 	 */
 	public void closeFile()
 	{
@@ -60,12 +64,12 @@ public class HC11337Controller implements Observer {
 		if(index >= 0)
 		{
 			view.removeEditorTab(index); 
-			model.removeEditor(index);
+			models.remove(index);
 		}
 	}
 	
 	/**
-	 * Governs the "Close All" user action
+	 * Controls the "Close All" user action
 	 */
 	public void closeAll()
 	{
@@ -73,7 +77,7 @@ public class HC11337Controller implements Observer {
 		for(int i = 0; i < numberOfTabs; i++)
 		{
 			view.removeEditorTab(0);
-			model.removeEditor(0);
+			models.remove(0);
 		}
 	}
 	
@@ -92,7 +96,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Open File" user action
+	 * Controls the "Open File" user action
 	 * 
 	 * @param file Source file
 	 */
@@ -105,7 +109,14 @@ public class HC11337Controller implements Observer {
 			else{
 				view.newEditorTab(file.getName());
 				view.switchEditor(view.getNumberOfTabs()-1);
-				model.newEditor(file);
+				model = new HC11337Core(file);
+				model.addObserver(view);
+				view.clearMemView();
+				model.refresh();
+				//model.addObserver(this);
+				//initCPUView();
+				//initMemTab(); //slow needs speedup
+				models.add(model);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -113,13 +124,13 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Save File" user action
+	 * Controls the "Save File" user action
 	 */
 	public void saveFile()
 	{
 		try{
 			if(view.getNumberOfTabs() > 0){
-				File file = model.getEditorFile(view.indexOfCurrentEditor());
+				File file = model.getEditorFile();
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 				writer.write(view.getCurrentEditor().getText());
 				writer.close();
@@ -131,7 +142,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Run" user action
+	 * Controls the "Run" user action
 	 */
 	public void run()
 	{
@@ -139,7 +150,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Step" user action
+	 * Controls the "Step" user action
 	 */
 	public void step()
 	{
@@ -147,7 +158,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Stop" user action
+	 * Controls the "Stop" user action
 	 */
 	public void stop()
 	{
@@ -155,7 +166,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Delete" user action
+	 * Controls the "Delete" user action
 	 */
 	public void delete()
 	{
@@ -163,7 +174,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Cut" user action
+	 * Controls the "Cut" user action
 	 */
 	public void cut()
 	{
@@ -171,13 +182,13 @@ public class HC11337Controller implements Observer {
 			if(view.getCurrentEditor().hasSelection())
 			{
 				view.getCurrentEditor().cut();
-				model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
+				model.setText(view.getCurrentEditor().getText());
 				highlightAtCaret();
 			}
 	}
 	
 	/**
-	 * Governs the "Copy" user action
+	 * Controls the "Copy" user action
 	 */
 	public void copy()
 	{
@@ -186,19 +197,19 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Paste" user action
+	 * Controls the "Paste" user action
 	 */
 	public void paste()
 	{
 		if(view.getNumberOfTabs() > 0){
 			view.getCurrentEditor().paste();
-			model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
+			model.setText(view.getCurrentEditor().getText());
 			highlightSyntax();
 		}
 	}
 	
 	/**
-	 * Governs the "Reset" user action
+	 * Controls the "Reset" user action
 	 */
 	public void reset()
 	{
@@ -207,7 +218,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Deep Reset" user action
+	 * Controls the "Deep Reset" user action
 	 */
 	public void deepReset()
 	{
@@ -215,7 +226,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Undo" user action
+	 * Controls the "Undo" user action
 	 */
 	public void undo()
 	{
@@ -223,7 +234,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Redo" user action
+	 * Controls the "Redo" user action
 	 */
 	public void redo()
 	{
@@ -231,7 +242,7 @@ public class HC11337Controller implements Observer {
 	}
 	
 	/**
-	 * Governs the "Build" user action
+	 * Controls the "Build" user action
 	 */
 	public void build()
 	{
@@ -240,7 +251,11 @@ public class HC11337Controller implements Observer {
 		try{
 			if(view.getNumberOfTabs() > 0)
 			{
-				Process asm = Runtime.getRuntime().exec("as11 " + '"' + model.getEditorFile(view.indexOfCurrentEditor()).getAbsolutePath() + '"');
+				String file = model.getEditorFile().getAbsolutePath();
+				String cmdarray[] = new String[2];
+				cmdarray[0] = "./as11";
+				cmdarray[1] = file;
+				Process asm = Runtime.getRuntime().exec(cmdarray);
 				Scanner console = new Scanner(asm.getInputStream());
 				view.setConsoleText("");
 				while(console.hasNext())
@@ -256,13 +271,13 @@ public class HC11337Controller implements Observer {
 	 */
 	public void highlightAtCaret()
 	{
-		model.setText(view.getCurrentEditor().getText(), view.indexOfCurrentEditor());
-		if(model.getText(view.indexOfCurrentEditor()).length() != 0){
-			int[] array1 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition());
+		model.setText(view.getCurrentEditor().getText());
+		if(model.getText().length() != 0){
+			int[] array1 = model.getHighlightAt(view.getCurrentEditor().getCaretPosition());
 			int[] array2;
 			Vector<int[]> v = new Vector<int[]>();
 			if(view.getCurrentEditor().getCaretPosition()-2 >= 0){
-				array2 = model.getHighlightAt(view.indexOfCurrentEditor(), view.getCurrentEditor().getCaretPosition()-2);
+				array2 = model.getHighlightAt(view.getCurrentEditor().getCaretPosition()-2);
 				v.add(array2);
 			}
 			v.add(array1);
@@ -276,11 +291,11 @@ public class HC11337Controller implements Observer {
 	public void highlightSyntax()
 	{
 		//view.getCurrentEditor().setText(model.getText(view.indexOfCurrentEditor()));
-		view.getCurrentEditor().highlightSyntax(model.getHighlightRanges(view.indexOfCurrentEditor()));
+		view.getCurrentEditor().highlightSyntax(model.getHighlightRanges());
 	}
 	
 	/**
-	 * Governs the "Select All" user action
+	 * Controls the "Select All" user action
 	 */
 	public void selectAll()
 	{
@@ -306,8 +321,14 @@ public class HC11337Controller implements Observer {
 	 */
 	public void initMemTab()
 	{
-		int mem[] = model.getMemDump();
-		view.setMemData(mem);
+		view.setMemData(model.getMemDump());
+	}
+	
+	public void switchModel(int index)
+	{
+		model = models.get(index);
+		view.clearMemView();
+		model.refresh();
 	}
 	
 	public void update(Observable o, Object arg) {

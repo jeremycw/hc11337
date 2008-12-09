@@ -43,8 +43,8 @@ public class HC11337 extends ApplicationWindow{
 	 * @param args
 	 */
 	private final HC11337GUI gui = new HC11337GUI();
-	private final HC11337Core core = new HC11337Core();
-	private final HC11337Controller controller = new HC11337Controller(gui, core);
+	//private final HC11337Core core = new HC11337Core("place holder");
+	private final HC11337Controller controller = new HC11337Controller(gui, null);
 	
 	public HC11337()
 	{
@@ -86,8 +86,8 @@ public class HC11337 extends ApplicationWindow{
 		getShell().setText("HC11337 - pronounced 'aitch 'cee 'ee-'leet");
 		getShell().setImage(icon);
 		gui.setUp(parent, controller);
-		controller.initCPUView();
-		controller.initMemTab();
+		//controller.initCPUView();
+		//controller.initMemTab();
 		return parent;
 	}
 }

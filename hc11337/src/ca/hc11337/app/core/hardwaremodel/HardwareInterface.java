@@ -16,6 +16,10 @@
 
 package ca.hc11337.app.core.hardwaremodel;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 public class HardwareInterface
 {
 	private Memory mem = new Memory();
@@ -79,5 +83,18 @@ public class HardwareInterface
 	public int[] getMemoryUpdates()
 	{
 		return mem.getUpdatedAddresses();
+	}
+	
+	public Hashtable<Integer, Integer> dumpUsedMem()
+	{
+		Hashtable<Integer, UnsignedNumber> dump = mem.getMemTable();
+		Hashtable<Integer, Integer> intDump = new Hashtable<Integer, Integer>();
+		Iterator<Entry<Integer, UnsignedNumber>> itr = dump.entrySet().iterator();
+		while(itr.hasNext())
+		{
+			Entry<Integer, UnsignedNumber> keyVal = itr.next();
+			intDump.put(keyVal.getKey(), keyVal.getValue().getVal());
+		}
+		return intDump;
 	}
 }

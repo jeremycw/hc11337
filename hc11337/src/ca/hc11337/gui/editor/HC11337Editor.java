@@ -23,6 +23,8 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TabFolder;
@@ -31,6 +33,7 @@ import org.eclipse.swt.widgets.TabItem;
 import ca.hc11337.gui.HC11337Controller;
 
 public class HC11337Editor {
+	private TabFolder editFolder;
 	private TabItem editorTab;
 	private StyledText fileEditor;
 	private final HC11337Controller controller;
@@ -45,6 +48,8 @@ public class HC11337Editor {
 		fileEditor.setTabs(8);
 		fileEditor.setFont(new Font(Display.getCurrent(), "Monospace", 10, SWT.NORMAL));
 		fileEditor.addKeyListener(new MyKeyListener(controller));
+		editFolder = parent;
+		editFolder.addMouseListener(new MyMouseListener(controller));
 		parent.pack();
 	}
 	
@@ -65,6 +70,33 @@ public class HC11337Editor {
 		{
 			
 		}
+	}
+	
+	class MyMouseListener implements MouseListener{
+		private HC11337Controller controller;
+		
+		MyMouseListener(HC11337Controller controller)
+		{
+			this.controller = controller;
+		}
+
+		@Override
+		public void mouseDoubleClick(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseDown(MouseEvent arg0) {
+			controller.switchModel(editFolder.getSelectionIndex());
+		}
+
+		@Override
+		public void mouseUp(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 	public boolean hasSelection()

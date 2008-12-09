@@ -21,13 +21,18 @@ import java.io.*;
 import java.awt.Point;
 
 public class HC11337Core extends Observable {
-	private Vector<Editor> editors = new Vector<Editor>();
+	private Editor editor;
 	private ConsoleManager consoleManager = new ConsoleManager();
 	private HardwareAPI api = new HardwareAPI();
 	
-	public HC11337Core()
+	public HC11337Core(File file) throws FileNotFoundException
 	{
-		
+		editor = new Editor(file);
+	}
+	
+	public HC11337Core(String name) throws FileNotFoundException
+	{
+		editor = new Editor(name);
 	}
 	
 	//Editor stuff
@@ -36,20 +41,20 @@ public class HC11337Core extends Observable {
 	 * Creates a new empty editor
 	 * 
 	 */
-	public void newEditor(String name) throws FileNotFoundException
+	/*public void newEditor(String name) throws FileNotFoundException
 	{
-		editors.add(new Editor(name));
-	}
+		editor = new Editor(name);
+	}*/
 	
 	/**
 	 * Close an editor
 	 * 
 	 * @param index Index of the editor tab
 	 */
-	public void removeEditor(int index)
+	/*public void removeEditor(int index)
 	{
 		editors.remove(index);
-	}
+	}*/
 	
 	/**
 	 * Create a new editor and load it with file
@@ -57,47 +62,47 @@ public class HC11337Core extends Observable {
 	 * @param file File to be loaded into the editor
 	 * @throws FileNotFoundException
 	 */
-	public void newEditor(File file) throws FileNotFoundException
+	/*public void newEditor(File file) throws FileNotFoundException
 	{
 		editors.add(new Editor(file));
 		setChanged();
 		notifyObservers(0);
-	}
+	}*/
 	
 	/**
-	 * Get the text of the editor at the given index
+	 * Get the text of the editor
 	 * 
 	 * @param index Index of the editor tab
 	 * @return Text from the editor
 	 */
-	public String getText(int index)
+	public String getText()
 	{
-		return editors.get(index).getText();
+		return editor.getText();
 	}
 	
 	/**
-	 * Set the text of the editor at the given index
+	 * Set the text of the editor
 	 * 
 	 * @param text
 	 * @param index
 	 */
-	public void setText(String text, int index)
+	public void setText(String text)
 	{
-		int sizeDif = getText(index).length() - text.length();
-		editors.get(index).setText(text);
+		int sizeDif = getText().length() - text.length();
+		editor.setText(text);
 		setChanged();
 		if(Math.abs(sizeDif) > 1)
 			notifyObservers(1);
 	}
 	
-	public Vector<int[]> getHighlightRanges(int index)
+	public Vector<int[]> getHighlightRanges()
 	{
-		return editors.get(index).highlightSyntax();
+		return editor.highlightSyntax();
 	}
 	
-	public int[] getHighlightAt(int index, int offset)
+	public int[] getHighlightAt(int offset)
 	{
-		return editors.get(index).checkTokenAt(offset);
+		return editor.checkTokenAt(offset);
 	}
 	
 	/**
@@ -106,9 +111,9 @@ public class HC11337Core extends Observable {
 	 * @param index The index of the tab that contains the editor
 	 * @return The file that is open in that editor
 	 */
-	public File getEditorFile(int index)
+	public File getEditorFile()
 	{
-		return editors.get(index).getFile();
+		return editor.getFile();
 	}
 	
 	//Sim stuff
@@ -174,12 +179,9 @@ public class HC11337Core extends Observable {
 	 * 
 	 * @return Dump of memory
 	 */
-	public int[] getMemDump()
+	public Hashtable<Integer, Integer> getMemDump()
 	{
-		int[] memDump = new int[65536];
-		for(int i = 0; i < 65536; i++)
-				memDump[i] = api.getMemoryAt(i);
-		return memDump;
+		return api.getUsedMemory();
 	}
 	
 	/**
@@ -201,6 +203,19 @@ public class HC11337Core extends Observable {
 	public int getMemoryAt(int index)
 	{
 		return api.getMemoryAt(index);
+	}
+	
+	public void addObserver(Observer o)
+	{
+		super.addObserver(o);
+		//setChanged();
+		//notifyObservers(4);
+	}
+	
+	public void refresh()
+	{
+		setChanged();
+		notifyObservers(4);
 	}
 	
 	

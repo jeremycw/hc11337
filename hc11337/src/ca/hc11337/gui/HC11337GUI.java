@@ -16,8 +16,12 @@
 
 package ca.hc11337.gui;
 
-import java.util.*;
-import java.awt.Point;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -25,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import ca.hc11337.app.core.HC11337Core;
 import ca.hc11337.gui.console.HC11337Console;
 import ca.hc11337.gui.cpuview.HC11337CPUView;
 import ca.hc11337.gui.editor.HC11337Editor;
@@ -32,7 +37,6 @@ import ca.hc11337.gui.fileselector.HC11337FileSelector;
 import ca.hc11337.gui.memoryview.HC11337Memory;
 import ca.hc11337.gui.stackview.HC11337StackView;
 import ca.hc11337.gui.watchedmemory.HC11337WatchedMem;
-import ca.hc11337.app.core.*;
 
 public class HC11337GUI implements Observer {
 
@@ -94,6 +98,7 @@ public class HC11337GUI implements Observer {
 		
 		sashMain.setWeights(new int[] {1,3,1});
 		sashEdit.setWeights(new int[] {5,3});
+		initMemData();
 	}
 	
 	/**
@@ -213,13 +218,27 @@ public class HC11337GUI implements Observer {
 	 * 
 	 * @param memory All memory values
 	 */
-	public void setMemData(int[] memory)
+	private void initMemData()
 	{
 		int[][] memDump = new int[4096][16];
-		for(int i = 0; i < 4096; i++)
-			for(int j = 0; j < 16; j++)
-				memDump[i][j] = memory[i*0x10+j];
+		for(int i = 0; i < 65536; i++)
+			memDump[i/0x10][i%0x10] = 0;
 		mem.setData(memDump);
+	}
+	
+	public void setMemData(Hashtable<Integer, Integer> memTable)
+	{
+		Iterator<Entry<Integer, Integer>> itr = memTable.entrySet().iterator();
+		while(itr.hasNext())
+		{
+			Entry<Integer, Integer> keyVal = itr.next();
+			mem.setMemoryCell(keyVal.getKey().intValue()/0x10, keyVal.getKey().intValue()%0x10, keyVal.getValue());
+		}
+	}
+	
+	public void clearMemView()
+	{
+		mem.reset();
 	}
 	
 	/**
@@ -260,11 +279,11 @@ public class HC11337GUI implements Observer {
 		switch((Integer)arg)
 		{
 		case 0:
-			editor.setText(((HC11337Core)o).getText(indexOfCurrentEditor()));
-			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges(indexOfCurrentEditor()));
+			editor.setText(((HC11337Core)o).getText());
+			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
 			break;
 		case 1:
-			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges(indexOfCurrentEditor()));
+			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
 			break;
 		case 2:
 			setMemData(((HC11337Core)o).getMemDump());
@@ -281,6 +300,12 @@ public class HC11337GUI implements Observer {
 			for(int i = 0; i < addr.length; i++)
 				mem.setMemoryCell(addr[i]/16, addr[i]%16, ((HC11337Core)o).getMemoryAt(addr[i]));
 			//setMemData(((HC11337Core)o).getMemDump());
+			break;
+		case 4:
+			controller.initCPUView();
+			controller.initMemTab();
+			editor.setText(((HC11337Core)o).getText());
+			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
 			break;
 		}
 	}
