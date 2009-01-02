@@ -17,52 +17,16 @@
 package ca.hc11337.app.core;
 
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
-import ca.hc11337.app.core.hardwaremodel.HardwareInterface;
-import ca.hc11337.app.core.hardwaremodel.UnsignedNumber;
-
-public class HardwareAPI {
-	private HardwareInterface hardware = new HardwareInterface();
+public interface HardwareAPI {
 	
-	public String[] getRegisterNames()
-	{
-		return hardware.getRegNames();
-	}
-	
-	public int[] getRegisterValues()
-	{
-		return hardware.getRegisterValues();
-	}
-	
-	public int[] getChangedMemoryValues()
-	{
-		return hardware.getMemoryUpdates();
-	}
-	
-	public void setMemoryAt(int index, int value)
-	{
-		hardware.setMemory(index, value);
-	}
-	
-	public int getMemoryAt(int index)
-	{
-		return hardware.getMemory(index);
-	}
-	
-	public void setRegister(int index, int value)
-	{
-		hardware.setReg(index, value);
-	}
-	
-	public void execute()
-	{
-		hardware.execute();
-	}
-	
-	public Hashtable<Integer, Integer> getUsedMemory()
-	{
-		return hardware.dumpUsedMem();
-	}
+	public String[] getRegisterNames();
+	public int[] getRegisterValues();
+	public int[] getChangedMemoryValues();
+	public void setMemoryAt(int index, int value);
+	public int getMemoryAt(int index);
+	public void setRegister(int index, int value);
+	public void execute();
+	public Hashtable<Integer, Integer> getUsedMemory();
+	public int[] getStack();
 }

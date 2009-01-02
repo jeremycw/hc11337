@@ -16,14 +16,19 @@
 
 package ca.hc11337.app.core;
 
-import java.util.*;
-import java.io.*;
-import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
+
+import ca.hc11337.app.core.hardwaremodel.HardwareInterface;
 
 public class HC11337Core extends Observable {
 	private Editor editor;
 	private ConsoleManager consoleManager = new ConsoleManager();
-	private HardwareAPI api = new HardwareAPI();
+	private HardwareAPI api = new HardwareInterface();
 	
 	public HC11337Core(File file) throws FileNotFoundException
 	{
@@ -166,7 +171,7 @@ public class HC11337Core extends Observable {
 			}
 		}while(processor.hasNextLine());
 		setChanged();
-		notifyObservers(2);
+		notifyObservers(4);
 	}
 	
 	public int[] getMemChanges()
@@ -216,6 +221,11 @@ public class HC11337Core extends Observable {
 	{
 		setChanged();
 		notifyObservers(4);
+	}
+	
+	public int[] getStack()
+	{
+		return api.getStack();
 	}
 	
 	

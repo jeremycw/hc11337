@@ -213,6 +213,11 @@ public class HC11337GUI implements Observer {
 		cpuView.setData(reg);
 	}
 	
+	public void setStackData(int[] stack)
+	{
+		stackView.setData(stack);
+	}
+	
 	/**
 	 * Sets the values displayed in the memory tab
 	 * 
@@ -273,22 +278,15 @@ public class HC11337GUI implements Observer {
 		return -1;
 	}
 	
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg) { //TODO Clean up, possibly merge cases
 		HC11337Editor editor = editors.get(indexOfCurrentEditor());
 		
 		switch((Integer)arg)
 		{
-		case 0:
-			editor.setText(((HC11337Core)o).getText());
+		case 1: //highlight as you type
 			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
 			break;
-		case 1:
-			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
-			break;
-		case 2:
-			setMemData(((HC11337Core)o).getMemDump());
-			break;
-		case 3:
+		case 3: //execute instruction
 			String regNames[] = ((HC11337Core)o).getRegisterNames();
 			int regValues[] = ((HC11337Core)o).getRegisterValues();
 			String[][] regs = new String[2][regNames.length];
@@ -299,11 +297,13 @@ public class HC11337GUI implements Observer {
 			int[] addr = ((HC11337Core)o).getMemChanges();
 			for(int i = 0; i < addr.length; i++)
 				mem.setMemoryCell(addr[i]/16, addr[i]%16, ((HC11337Core)o).getMemoryAt(addr[i]));
+			controller.updateStackView();
 			//setMemData(((HC11337Core)o).getMemDump());
 			break;
-		case 4:
+		case 4: //open/switch tab
 			controller.initCPUView();
 			controller.initMemTab();
+			controller.updateStackView();
 			editor.setText(((HC11337Core)o).getText());
 			getCurrentEditor().highlightSyntax(((HC11337Core)o).getHighlightRanges());
 			break;

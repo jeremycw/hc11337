@@ -21,27 +21,42 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.*;
 
+import ca.hc11337.gui.cpuview.CPUViewContentProvider;
+import ca.hc11337.gui.cpuview.CPUViewLabelProvider;
+
 public class HC11337StackView {
+	private final TableViewer stackViewer;
+	int[] data;
 	
 	public HC11337StackView(Composite parent, int style)
 	{
 		Group stack = new Group(parent, 0);
 		stack.setText("Stack");
 		stack.setLayout(new FillLayout());
-		final TableViewer stackViewer = new TableViewer(stack, 0);
+		stackViewer = new TableViewer(stack, 0);
 		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(40, false));
+		//layout.addColumnData(new ColumnWeightData(40, false));
 		layout.addColumnData(new ColumnWeightData(60, true));
 		stackViewer.getTable().setLayout(layout);
 		stackViewer.getTable().setLinesVisible(true);
 		stackViewer.getTable().setHeaderVisible(true);
 		stackViewer.getTable().setToolTipText("Stack");
+		stackViewer.setContentProvider(new StackViewContentProvider());
+		stackViewer.setLabelProvider(new StackViewLabelProvider());
+		stackViewer.getTable().setFont(new Font(Display.getCurrent(), "Monospace", 10, SWT.NORMAL));
 		
-		TableColumn column1 = new TableColumn(stackViewer.getTable(), SWT.CENTER);
-		column1.setText("Address");
+		//TableColumn column1 = new TableColumn(stackViewer.getTable(), SWT.CENTER);
+		//column1.setText("Address");
 		TableColumn column2 = new TableColumn(stackViewer.getTable(), SWT.LEFT);
 		column2.setText("Value");
+	}
+	
+	public void setData(int[] stack)
+	{
+		data = stack;
+		stackViewer.setInput(data);
 	}
 }

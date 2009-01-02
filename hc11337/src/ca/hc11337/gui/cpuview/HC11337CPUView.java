@@ -22,8 +22,10 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -46,6 +48,7 @@ public class HC11337CPUView {
 		cpuViewer.getTable().setToolTipText("CPU");
 		cpuViewer.setContentProvider(new CPUViewContentProvider());
 		cpuViewer.setLabelProvider(new CPUViewLabelProvider());
+		cpuViewer.getTable().setFont(new Font(Display.getCurrent(), "Monospace", 10, SWT.NORMAL));
 		
 		TableColumn column1 = new TableColumn(cpuViewer.getTable(), SWT.CENTER);
 		column1.setText("Register");

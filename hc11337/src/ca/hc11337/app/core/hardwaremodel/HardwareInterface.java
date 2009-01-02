@@ -20,13 +20,15 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-public class HardwareInterface
+import ca.hc11337.app.core.HardwareAPI;
+
+public class HardwareInterface implements HardwareAPI
 {
 	private Memory mem = new Memory();
 	private CPU cpu = new CPU(mem);
 	private String[] regNames = new String[]{"A", "B", "D", "X", "Y", "PC", "SP"};
 	
-	public void setReg(int reg, int val)
+	public void setRegister(int reg, int val)
 	{
 		UnsignedNumber a;
 		if(reg < 2)
@@ -65,27 +67,27 @@ public class HardwareInterface
 		cpu.executeInstruction();
 	}
 	
-	public String[] getRegNames()
+	public String[] getRegisterNames()
 	{
 		return regNames;
 	}
 	
-	public void setMemory(int index, int value)
+	public void setMemoryAt(int index, int value)
 	{
 		mem.write(index, new UnsignedNumber(value, 1));
 	}
 	
-	public int getMemory(int index)
+	public int getMemoryAt(int index)
 	{
 		return mem.read(index).getVal();
 	}
 	
-	public int[] getMemoryUpdates()
+	public int[] getChangedMemoryValues()
 	{
 		return mem.getUpdatedAddresses();
 	}
 	
-	public Hashtable<Integer, Integer> dumpUsedMem()
+	public Hashtable<Integer, Integer> getUsedMemory()
 	{
 		Hashtable<Integer, UnsignedNumber> dump = mem.getMemTable();
 		Hashtable<Integer, Integer> intDump = new Hashtable<Integer, Integer>();
@@ -96,5 +98,21 @@ public class HardwareInterface
 			intDump.put(keyVal.getKey(), keyVal.getValue().getVal());
 		}
 		return intDump;
+	}
+
+	public int[] getStack() {
+		int sp = cpu.getReg(Reg.SP).getVal();
+		int[] stack = new int[(short)Math.abs(sp-65535)+1];
+		int count = 0;
+		if((short)Math.abs(sp-65535)+1 > 0)
+		{
+			while(sp <= 65535)
+			{
+				stack[count] = mem.read(sp).getVal();
+				count++;
+				sp++;
+			}
+		}
+		return stack;
 	}
 }

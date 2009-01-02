@@ -114,8 +114,6 @@ public class HC11337Controller implements Observer {
 				view.clearMemView();
 				model.refresh();
 				//model.addObserver(this);
-				//initCPUView();
-				//initMemTab(); //slow needs speedup
 				models.add(model);
 			}
 		}catch(Exception e){
@@ -146,7 +144,7 @@ public class HC11337Controller implements Observer {
 	 */
 	public void run()
 	{
-		view.setCPURegister(0, 12);
+		//view.setCPURegister(0, 12);
 	}
 	
 	/**
@@ -322,6 +320,11 @@ public class HC11337Controller implements Observer {
 	public void initMemTab()
 	{
 		view.setMemData(model.getMemDump());
+	}
+	
+	public void updateStackView()
+	{
+		view.setStackData(model.getStack());
 	}
 	
 	public void switchModel(int index)
