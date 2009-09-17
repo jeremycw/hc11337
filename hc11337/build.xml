@@ -16,10 +16,10 @@
   <target name="compile" depends="init"
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
-  	<path id="lib.path.ref">
-  	    <fileset dir="lib" includes="*.jar"/>
-  	</path>
-    <javac srcdir="${src}" destdir="${build}" classpath="${toString:lib.path.ref}"/>
+
+    <javac srcdir="${src}" destdir="${build}">
+    	<classpath refid="libs"/>
+    </javac>
   </target>
 
   <target name="dist" depends="compile"
@@ -81,4 +81,8 @@
 		<mkdir dir="doc"/>
 	    <javadoc destdir="doc" sourcepath="src"/>
 	</target>
+	
+  	<path id="libs">
+  	    <fileset dir="lib" includes="*.jar"/>
+  	</path>
 </project>
